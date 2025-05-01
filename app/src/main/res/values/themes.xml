@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.Gol" parent="android:Theme.Material.Light.NoActionBar"/>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_bg</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.Gol</item>
+    </style>
+</resources>
