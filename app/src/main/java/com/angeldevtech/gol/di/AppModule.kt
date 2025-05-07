@@ -37,7 +37,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideApiService(client: HttpClient): ApiService {
-        return ApiServiceImpl(client)
+        return ApiServiceImpl { client }
     }
 
     @Provides

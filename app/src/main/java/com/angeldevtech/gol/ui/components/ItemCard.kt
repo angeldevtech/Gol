@@ -49,12 +49,12 @@ fun ItemCard (
     val paletteResult = if (item.leagueImageUrl.isNotBlank()) {
         viewModel.paletteCache[item.leagueImageUrl] ?: PaletteResult(
             cardColor = MaterialTheme.colorScheme.surfaceVariant,
-            textColor = Color.White.copy(alpha = 0.7f)
+            textColor = Color.White.copy(alpha = 0.8f)
         )
     } else {
         PaletteResult(
             cardColor = MaterialTheme.colorScheme.surfaceVariant,
-            textColor = Color.White.copy(alpha = 0.7f)
+            textColor = Color.White.copy(alpha = 0.8f)
         )
     }
 

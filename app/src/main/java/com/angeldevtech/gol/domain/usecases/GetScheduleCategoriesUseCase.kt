@@ -4,7 +4,9 @@ import com.angeldevtech.gol.domain.models.ScheduleCategories
 import com.angeldevtech.gol.domain.models.ScheduleItem
 import com.angeldevtech.gol.domain.repositories.ScheduleRepository
 import jakarta.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 class GetScheduleCategoriesUseCase @Inject constructor(
@@ -31,5 +33,6 @@ class GetScheduleCategoriesUseCase @Inject constructor(
                     }
                 Result.success(categories)
             }
+            .flowOn(Dispatchers.Default)
     }
 }

@@ -8,13 +8,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.tv.material3.Text
 import com.angeldevtech.gol.domain.models.ScheduleCategories
 import com.angeldevtech.gol.domain.models.ScheduleItem
 import com.angeldevtech.gol.ui.components.CategoryList
@@ -49,13 +52,15 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(vertical = 24.dp)
         ){
-            item { HomeHeader(
-                uiState = uiState,
-                viewModel = viewModel
-            ) }
+            item(contentType = "HomeHeader") {
+                HomeHeader(
+                    uiState = uiState,
+                    viewModel = viewModel
+                )
+            }
 
             when (val state = uiState){
-                is HomeUIState.Loading -> item {
+                is HomeUIState.Loading -> item(contentType = "LoadingContent") {
                     Box(
                         modifier = Modifier
                             .height(scope.maxHeight - 76.dp)
@@ -66,7 +71,7 @@ fun HomeScreen(
                 }
                 is HomeUIState.Success -> {
                     if (state.currentOrUpcomingEvents.isNotEmpty()){
-                        item {
+                        item(contentType = "currentOrUpcomingEvents") {
                             CategoryList(
                                 ScheduleCategories(name = "En juego y en breve", items = state.currentOrUpcomingEvents),
                                 viewModel,
@@ -74,11 +79,30 @@ fun HomeScreen(
                             )
                         }
                     }
-                    items(state.categories) { category ->
-                        CategoryList(category, viewModel, onItemSelected = onItemSelected)
+                    if (state.categories.isNotEmpty()){
+                        items(
+                            state.categories,
+                            contentType = { "CategoryList" }
+                        ) { category ->
+                            CategoryList(category, viewModel, onItemSelected = onItemSelected)
+                        }
+                    } else {
+                        item(contentType = "EmptyList") {
+                            Box(
+                                modifier = Modifier
+                                    .height(scope.maxHeight - 100.dp)
+                                    .fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "No hay eventos por ahora",
+                                    style = MaterialTheme.typography.headlineMedium
+                                )
+                            }
+                        }
                     }
                 }
-                is HomeUIState.Error -> item {
+                is HomeUIState.Error -> item(contentType = "ErrorContent") {
                     Box(
                         modifier = Modifier
                             .height(scope.maxHeight - 100.dp)

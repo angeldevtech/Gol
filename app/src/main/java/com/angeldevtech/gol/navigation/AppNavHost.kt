@@ -18,7 +18,9 @@ fun AppNavHost() {
             })
         }
         composable<Player> {
-            PlayerScreen()
+            PlayerScreen(
+                onBack = { navController.popBackStack() }
+            )
         }
     }
 }
