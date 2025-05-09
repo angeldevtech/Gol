@@ -1,102 +1,80 @@
 package com.angeldevtech.gol.ui.screens.player
 
 import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
-import android.view.KeyEvent
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.nativeKeyCode
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.Button
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.angeldevtech.gol.ui.components.PlayerControlsOverlay
 import com.angeldevtech.gol.ui.components.VideoPlayer
-import kotlinx.coroutines.delay
-
-fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
-}
+import com.angeldevtech.gol.utils.isDpadCenterKey
+import com.angeldevtech.gol.utils.isDpadMovementKey
 
 @Composable
 fun PlayerScreen(
     viewModel: PlayerViewModel = hiltViewModel(),
-    onBack: () -> Boolean
+    onBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var showControls by remember { mutableStateOf(true) }
     val context = LocalContext.current
-    val activity = context.findActivity()
-    val window = activity?.window
+    val window = (context as? Activity)?.window
+    val player = remember { viewModel.getPlayer() }
 
-    val playPauseButtonFocusRequester = remember { FocusRequester() }
+    BackHandler(onBack = onBack)
 
-    LaunchedEffect(showControls) {
-        val currentState = uiState
-        if (showControls && currentState is PlayerUIState.Success) {
-            delay(100)
-            try { playPauseButtonFocusRequester.requestFocus() } catch (_: Exception) { /* Ignore focus request errors */ }
-            if (currentState.isPlaying){
-                delay(5000)
-                showControls = false
-            }
-        }
+    LifecycleStartEffect(Unit) {
+        viewModel.loadItemContent()
+        onStopOrDispose {  }
     }
 
-    fun showAndResetTimer() {
-        showControls = true
-    }
+    val overlayButtonFocusRequester = remember { FocusRequester() }
+
+    val successState = uiState as? PlayerUIState.Success
+    val shouldTriggerInitialOverlayFocus = successState != null &&
+            successState.isOverlayVisible &&
+            !successState.isLoadingNewSource
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .focusable()
             .onKeyEvent { keyEvent ->
-                if (keyEvent.type == KeyEventType.KeyDown && keyEvent.key.nativeKeyCode in listOf(
-                        KeyEvent.KEYCODE_DPAD_UP,
-                        KeyEvent.KEYCODE_DPAD_DOWN,
-                        KeyEvent.KEYCODE_DPAD_LEFT,
-                        KeyEvent.KEYCODE_DPAD_RIGHT,
-                        KeyEvent.KEYCODE_DPAD_CENTER,
-                        KeyEvent.KEYCODE_ENTER,
-                        KeyEvent.KEYCODE_NUMPAD_ENTER
-                    )
-                ) {
-                    showAndResetTimer()
+                if (keyEvent.type == KeyEventType.KeyDown && keyEvent.key.isDpadMovementKey()) {
+                    viewModel.showOverlayTemporarily()
                     return@onKeyEvent false
+                }
+                if (keyEvent.type == KeyEventType.KeyDown && keyEvent.key.isDpadCenterKey()) {
+                    viewModel.showOverlayTemporarily()
+                    return@onKeyEvent true
                 }
                 false
             }
@@ -123,20 +101,28 @@ fun PlayerScreen(
                         style = MaterialTheme.typography.titleLarge
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-                    Button(
-                        onClick = { onBack() }
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "OK")
+                        Button(
+                            onClick = { onBack() }
+                        ) {
+                            Text(text = "Volver a la página de inicio")
+                        }
+                        Button(
+                            onClick = { viewModel.loadItemContent() }
+                        ) {
+                            Text(text = "Reintentar")
+                        }
                     }
                 }
             }
             is PlayerUIState.Success -> {
-                // Pass player state down
-                VideoPlayer(state = state, window = window)
+                VideoPlayer(state = state, window = window, player = player)
 
-                // --- Controls Overlay Layer ---
                 AnimatedVisibility(
-                    visible = showControls,
+                    visible = state.isOverlayVisible,
                     enter = fadeIn(),
                     exit = fadeOut(),
                     modifier = Modifier.fillMaxSize()
@@ -144,7 +130,8 @@ fun PlayerScreen(
                     PlayerControlsOverlay(
                         state = state,
                         viewModel = viewModel,
-                        playPauseFocusRequester = playPauseButtonFocusRequester,
+                        overlayButtonFocusRequester = overlayButtonFocusRequester,
+                        initialFocusTrigger = shouldTriggerInitialOverlayFocus,
                         modifier = Modifier.fillMaxSize()
                     )
                 }

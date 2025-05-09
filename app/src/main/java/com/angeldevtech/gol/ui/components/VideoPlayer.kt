@@ -1,6 +1,5 @@
 package com.angeldevtech.gol.ui.components
 
-import android.util.Log
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
@@ -12,12 +11,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import com.angeldevtech.gol.ui.screens.player.PlayerUIState
 
 @Composable
 fun VideoPlayer(
     state: PlayerUIState.Success,
+    player: ExoPlayer,
     window: Window?,
 ) {
     val context = LocalContext.current
@@ -28,32 +29,33 @@ fun VideoPlayer(
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
             useController = false
+            isFocusable = false
+            isFocusableInTouchMode = false
         }
     }
 
-    DisposableEffect(Unit) {
-        Log.d("PLAYER", "VideoPlayer: ${state.isPlaying}")
+    DisposableEffect(state.isPlaying) {
         if (window != null) {
             if (state.isPlaying) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             } else {
-                Log.d("PLAYER", "Clearing FLAG_KEEP_SCREEN_ON")
                 window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             }
         }
-        onDispose {
-            if (window != null) {
-                Log.d("PLAYER", "Clearing FLAG_KEEP_SCREEN_ON dispose")
-                window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            }
-        }
+        onDispose { }
     }
 
-    DisposableEffect(state.player) {
-        playerView.player = state.player
+    DisposableEffect(player) {
+        playerView.player = player
 
         onDispose {
             playerView.player = null
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
     }
 

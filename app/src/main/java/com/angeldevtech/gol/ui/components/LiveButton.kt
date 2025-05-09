@@ -23,12 +23,14 @@ import androidx.tv.material3.Text
 @Composable
 fun LiveButton(
     isEnabled: Boolean,
+    isLive: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Button(
         onClick = onClick,
         modifier = modifier,
+        enabled = isEnabled,
         colors = ButtonDefaults.colors(
             containerColor = Color.Black.copy(alpha = 0.9f),
             focusedContainerColor = MaterialTheme.colorScheme.onSurface,
@@ -46,7 +48,7 @@ fun LiveButton(
             Box(
                 modifier = Modifier
                     .size(8.dp)
-                    .background(if (isEnabled) Color.Red else Color.Gray, CircleShape)
+                    .background(if (isLive) Color.Red else Color.Gray, CircleShape)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(

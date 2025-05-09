@@ -12,6 +12,7 @@ class PlayerRepositoryImpl @Inject constructor() : PlayerRepository {
 
     override suspend fun extractM3U8Url(webPlayerUrl: String): Result<String> = withContext(Dispatchers.IO) {
         try {
+
             if (webPlayerUrl.isBlank()) {
                 return@withContext Result.failure(IllegalArgumentException("¡Ups! La fuente no tiene una url válida"))
             }

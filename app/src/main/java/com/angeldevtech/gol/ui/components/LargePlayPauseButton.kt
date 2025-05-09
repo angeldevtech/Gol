@@ -16,23 +16,20 @@ import androidx.tv.material3.IconButtonDefaults
 fun LargePlayPauseButton(
     isPlaying: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier // Keep accepting the modifier (for focusRequester, alignment)
+    modifier: Modifier = Modifier
 ) {
-    // Use IconButton for better blending - it's typically transparent background
     IconButton(
         onClick = onClick,
-        modifier = modifier.size(120.dp), // Keep the large touch target size
-        // Optionally customize focused appearance if default isn't enough
+        modifier = modifier.size(120.dp),
         colors = IconButtonDefaults.colors(
-            containerColor = Color.Transparent,
+            containerColor = Color.Black.copy(alpha = 0.3f),
             contentColor = Color.White,
-            focusedContainerColor = Color.Black.copy(alpha = 0.7f)
+            focusedContainerColor = Color.White.copy(alpha = 0.7f),
         )
     ) {
         Icon(
             imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
             contentDescription = if (isPlaying) "Pause" else "Play",
-            tint = Color.White,
             modifier = Modifier.size(100.dp)
         )
     }
