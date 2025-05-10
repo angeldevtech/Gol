@@ -12,10 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -27,7 +25,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Border
 import androidx.tv.material3.Button
@@ -53,7 +50,9 @@ fun PlayerControlsOverlay(
     }
 
     Box(modifier = modifier.background(Color.Black.copy(alpha = 0.4f))) {
-        Column(
+        PlayerOverlayHeader(
+            name = state.scheduleItem.name,
+            category = state.scheduleItem.category,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
@@ -65,28 +64,12 @@ fun PlayerControlsOverlay(
                     )
                 )
                 .padding(horizontal = 48.dp, vertical = 24.dp)
-        ) {
-            Text(
-                text = state.scheduleItem.name,
-                color = Color.White,
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-            )
-            Text(
-                modifier = Modifier.padding(top = 8.dp),
-                text = state.scheduleItem.category,
-                color = Color.White
-            )
-        }
+        )
 
         if(state.isLoadingNewSource) {
-            CircularProgressIndicator(
+            LoadingIndicator(
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .size(100.dp),
-                color = Color.Gray,
-                trackColor = Color.White,
-                strokeWidth = 10.dp
             )
         } else {
             if (state.error != null) {

@@ -1,6 +1,5 @@
 package com.angeldevtech.gol.ui.screens.home
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,19 +7,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.tv.material3.Text
 import com.angeldevtech.gol.domain.models.ScheduleCategories
 import com.angeldevtech.gol.domain.models.ScheduleItem
 import com.angeldevtech.gol.ui.components.tv.CategoryList
+import com.angeldevtech.gol.ui.components.tv.EmptyList
 import com.angeldevtech.gol.ui.components.tv.ErrorContent
 import com.angeldevtech.gol.ui.components.tv.HomeHeader
 import com.angeldevtech.gol.ui.components.tv.LoadingContent
@@ -52,19 +49,17 @@ fun HomeScreen(
             item(contentType = "HomeHeader") {
                 HomeHeader(
                     uiState = uiState,
-                    viewModel = viewModel
+                    viewModel = viewModel,
                 )
             }
 
             when (val state = uiState){
                 is HomeUIState.Loading -> item(contentType = "LoadingContent") {
-                    Box(
+                    LoadingContent(
                         modifier = Modifier
                             .height(scope.maxHeight - 76.dp)
                             .fillMaxWidth()
-                    ) {
-                        LoadingContent()
-                    }
+                    )
                 }
                 is HomeUIState.Success -> {
                     if (state.currentOrUpcomingEvents.isNotEmpty()){
@@ -85,31 +80,22 @@ fun HomeScreen(
                         }
                     } else {
                         item(contentType = "EmptyList") {
-                            Box(
+                            EmptyList(
                                 modifier = Modifier
                                     .height(scope.maxHeight - 100.dp)
-                                    .fillMaxWidth(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "No hay eventos por ahora",
-                                    style = MaterialTheme.typography.headlineMedium
-                                )
-                            }
+                                    .fillMaxWidth()
+                            )
                         }
                     }
                 }
                 is HomeUIState.Error -> item(contentType = "ErrorContent") {
-                    Box(
+                    ErrorContent(
+                        message = state.message,
+                        onRetry = { viewModel.onRefresh() },
                         modifier = Modifier
                             .height(scope.maxHeight - 100.dp)
                             .fillMaxWidth()
-                    ) {
-                        ErrorContent(
-                            message = state.message,
-                            onRetry = { viewModel.onRefresh() }
-                        )
-                    }
+                    )
                 }
             }
         }

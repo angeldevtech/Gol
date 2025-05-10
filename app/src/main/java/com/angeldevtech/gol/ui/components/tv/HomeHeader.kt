@@ -24,9 +24,10 @@ import com.angeldevtech.gol.ui.screens.home.HomeViewModel
 fun HomeHeader(
     uiState: HomeUIState,
     viewModel: HomeViewModel,
+    modifier: Modifier = Modifier
 ){
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 48.dp),
         verticalAlignment = Alignment.CenterVertically,

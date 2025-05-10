@@ -1,4 +1,5 @@
 [versions]
+accompanistSwiperefresh = "0.27.0"
 activityCompose = "1.10.1"
 agp = "8.10.0"
 coilCompose = "2.7.0"
@@ -8,18 +9,19 @@ jsoup = "1.20.1"
 kotlin = "2.0.21"
 kotlinxSerializationJson = "1.8.1"
 ktorClientCore = "3.1.2"
-lifecycleRuntimeKtx = "2.8.7"
-material3 = "1.4.0-alpha13"
+lifecycleRuntimeKtx = "2.9.0"
+material3 = "1.4.0-alpha14"
 materialIconsExtended = "1.7.8"
 media3Exoplayer = "1.6.1"
-navigationCompose = "2.8.9"
+navigationCompose = "2.9.0"
 palette = "1.0.0"
 tvMaterial = "1.0.0"
-uiToolingPreview = "1.8.0"
-composeBom = "2025.04.01"
+uiToolingPreview = "1.8.1"
+composeBom = "2025.05.00"
 hiltNavigationCompose = "1.2.0"
 
 [libraries]
+accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "accompanistSwiperefresh" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }

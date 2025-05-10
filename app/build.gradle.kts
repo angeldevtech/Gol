@@ -87,6 +87,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.material.icons.extended)
+    implementation(libs.accompanist.swiperefresh)
 
     // Ktor for HTTP
     implementation(libs.ktor.client.core)

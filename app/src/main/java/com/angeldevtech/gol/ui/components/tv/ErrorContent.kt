@@ -1,6 +1,7 @@
 package com.angeldevtech.gol.ui.components.tv
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,24 +17,29 @@ import androidx.tv.material3.Text
 @Composable
 fun ErrorContent(
     message: String,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Column (
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
+    Box(
+        modifier = modifier
     ) {
-        Text(
-            text = message,
-            style = MaterialTheme.typography.headlineMedium
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = onRetry,
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
         ) {
             Text(
-                text = "Cargar de nuevo"
+                text = message,
+                style = MaterialTheme.typography.headlineMedium
             )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = onRetry,
+            ) {
+                Text(
+                    text = "Cargar de nuevo"
+                )
+            }
         }
     }
 }
