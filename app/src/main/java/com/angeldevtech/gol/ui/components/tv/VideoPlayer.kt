@@ -1,4 +1,4 @@
-package com.angeldevtech.gol.ui.components
+package com.angeldevtech.gol.ui.components.tv
 
 import android.view.ViewGroup
 import android.view.Window

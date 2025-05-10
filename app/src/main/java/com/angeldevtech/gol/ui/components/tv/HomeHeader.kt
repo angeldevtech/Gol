@@ -1,4 +1,4 @@
-package com.angeldevtech.gol.ui.components
+package com.angeldevtech.gol.ui.components.tv
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

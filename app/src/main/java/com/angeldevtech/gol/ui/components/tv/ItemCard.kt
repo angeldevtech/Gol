@@ -1,4 +1,4 @@
-package com.angeldevtech.gol.ui.components
+package com.angeldevtech.gol.ui.components.tv
 
 import android.graphics.drawable.BitmapDrawable
 import androidx.compose.animation.animateColorAsState

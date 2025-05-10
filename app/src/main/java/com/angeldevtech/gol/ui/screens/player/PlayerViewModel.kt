@@ -1,6 +1,7 @@
 package com.angeldevtech.gol.ui.screens.player
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -107,7 +108,18 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    fun loadItemContent(){
+    fun onLoad(){
+        Log.d("PLAYER", "onLoad: START")
+        if (_uiState.value !is PlayerUIState.Success){
+            Log.d("PLAYER", "onLoad: NO SUCCESS")
+            loadItemContent()
+        } else {
+            Log.d("PLAYER", "onLoad: SUCCESS")
+            attemptPlayerRecovery()
+        }
+    }
+
+    private fun loadItemContent(){
         viewModelScope.launch {
             _uiState.value = PlayerUIState.Loading
 
@@ -153,22 +165,31 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun selectEmbedIndex(embedIndex: Int) {
-        cancelOverlayAutoHide()
-        cancelPauseTimer()
-
         val currentState = _uiState.value
         if (currentState is PlayerUIState.Success) {
-            player?.apply {
-                stop()
-                clearMediaItems()
+            Log.d("PLAYER", "selectEmbedIndex: START")
+
+            if (
+                currentState.selectedEmbedIndex != embedIndex ||
+                currentState.error != null ||
+                !currentState.isPlaying
+            ) {
+                cancelOverlayAutoHide()
+                cancelPauseTimer()
+
+                Log.d("PLAYER", "selectEmbedIndex: PROCESS")
+                player?.apply {
+                    stop()
+                    clearMediaItems()
+                }
+                _uiState.value = currentState.copy(
+                    selectedEmbedIndex = embedIndex,
+                    isOverlayVisible = true,
+                    isLoadingNewSource = true,
+                    error = null
+                )
+                loadContentForIndex(embedIndex)
             }
-            _uiState.value = currentState.copy(
-                selectedEmbedIndex = embedIndex,
-                isOverlayVisible = true,
-                isLoadingNewSource = true,
-                error = null
-            )
-            loadContentForIndex(embedIndex)
         }
     }
 
@@ -176,6 +197,7 @@ class PlayerViewModel @Inject constructor(
         val currentState = _uiState.value
         if (currentState is PlayerUIState.Success) {
             viewModelScope.launch {
+                Log.d("PLAYER", "loadContentForIndex: START")
                 try {
                     val embedUrl = currentState.scheduleItem.embeds[embedIndex].url
 
@@ -200,6 +222,7 @@ class PlayerViewModel @Inject constructor(
                                 prepare()
                                 playWhenReady = true
                             }
+                            Log.d("PLAYER", "loadContentForIndex: SUCCESS?")
                         }
                         .onFailure { extractionError ->
                             _uiState.value = currentState.copy(
@@ -258,6 +281,7 @@ class PlayerViewModel @Inject constructor(
 
     private fun startPauseTimer() {
         if (pauseTimerJob?.isCompleted == true){
+            Log.d("PLAYER", "startPauseTimer: COMPLETED")
             return
         }
         pauseTimerJob?.cancel()
@@ -265,6 +289,7 @@ class PlayerViewModel @Inject constructor(
             delay(pauseThreshold)
             val currentState = _uiState.value
             if (currentState is PlayerUIState.Success && !currentState.isPlaying) {
+                Log.d("PLAYER", "startPauseTimer: TO FALSE")
                 _uiState.value = currentState.copy(isLive = false)
             }
         }
@@ -288,8 +313,18 @@ class PlayerViewModel @Inject constructor(
     }
 
     private fun cancelPauseTimer() {
+        Log.d("PLAYER", "cancelPauseTimer")
         pauseTimerJob?.cancel()
         pauseTimerJob = null
+    }
+
+    fun pausePlayer() {
+        val currentState = _uiState.value
+        if (currentState is PlayerUIState.Success) {
+            player?.apply {
+                stop()
+            }
+        }
     }
 
     private fun releasePlayer() {

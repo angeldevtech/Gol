@@ -1,4 +1,4 @@
-package com.angeldevtech.gol.ui.components
+package com.angeldevtech.gol.ui.components.tv
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -16,11 +16,12 @@ import androidx.tv.material3.IconButtonDefaults
 fun LargePlayPauseButton(
     isPlaying: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     IconButton(
         onClick = onClick,
-        modifier = modifier.size(120.dp),
+        modifier = modifier
+            .size(120.dp),
         colors = IconButtonDefaults.colors(
             containerColor = Color.Black.copy(alpha = 0.3f),
             contentColor = Color.White,

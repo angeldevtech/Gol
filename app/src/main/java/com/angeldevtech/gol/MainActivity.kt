@@ -14,7 +14,9 @@ import androidx.tv.material3.LocalContentColor
 import androidx.tv.material3.MaterialTheme
 import com.angeldevtech.gol.navigation.AppNavHost
 import com.angeldevtech.gol.ui.Theme
+import com.angeldevtech.gol.utils.DeviceTypeProvider
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 
 /**
  * Loads [AppNavHost].
@@ -22,20 +24,23 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @Inject
+    lateinit var deviceTypeProvider: DeviceTypeProvider
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         setContent {
-            Theme {
+            Theme(deviceTypeProvider) {
                 Box(
                     modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)
                 ) {
                     CompositionLocalProvider(
                         LocalContentColor provides MaterialTheme.colorScheme.onSurface
                     ) {
-                        AppNavHost()
+                        AppNavHost(deviceTypeProvider)
                     }
                 }
             }

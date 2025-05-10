@@ -1,4 +1,4 @@
-package com.angeldevtech.gol.ui.components
+package com.angeldevtech.gol.ui.components.tv
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -18,6 +18,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -40,8 +43,14 @@ fun PlayerControlsOverlay(
     viewModel: PlayerViewModel,
     overlayButtonFocusRequester: FocusRequester,
     initialFocusTrigger: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
+    val shouldFocusSourcesInitially by remember(initialFocusTrigger, state) {
+        derivedStateOf {
+            initialFocusTrigger && state.isLoadingNewSource
+        }
+    }
+
     Box(modifier = modifier.background(Color.Black.copy(alpha = 0.4f))) {
         Column(
             modifier = Modifier
@@ -108,7 +117,7 @@ fun PlayerControlsOverlay(
                     onClick = { viewModel.togglePlayPause() },
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .focusRequester(overlayButtonFocusRequester)
+                        .focusRequester(overlayButtonFocusRequester),
                 )
                 LaunchedEffect(initialFocusTrigger) {
                     if (initialFocusTrigger) {
@@ -142,6 +151,7 @@ fun PlayerControlsOverlay(
                 )
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                     contentPadding = PaddingValues(horizontal = 8.dp)
                 ) {
                     itemsIndexed(state.scheduleItem.embeds) { index, embed ->
@@ -157,13 +167,19 @@ fun PlayerControlsOverlay(
                                 border = Border(
                                     border = BorderStroke(1.dp, Color.Gray)
                                 )
-                            )
+                            ),
+                            modifier = if (isSelected && shouldFocusSourcesInitially) Modifier.focusRequester(overlayButtonFocusRequester) else Modifier
                         ) {
                             Text(
                                 text = embed.name,
                             )
                         }
                     }
+                }
+            }
+            LaunchedEffect(shouldFocusSourcesInitially) {
+                if (shouldFocusSourcesInitially) {
+                    overlayButtonFocusRequester.requestFocus()
                 }
             }
         }

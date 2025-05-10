@@ -1,6 +1,5 @@
-package com.angeldevtech.gol.ui.components
+package com.angeldevtech.gol.ui.components.tv
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -14,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.tv.material3.Border
 import androidx.tv.material3.Button
 import androidx.tv.material3.ButtonDefaults
 import androidx.tv.material3.MaterialTheme
@@ -36,13 +34,11 @@ fun LiveButton(
             focusedContainerColor = MaterialTheme.colorScheme.onSurface,
             focusedContentColor = MaterialTheme.colorScheme.surface,
         ),
-        border = ButtonDefaults.border(
-            border = Border.None,
-            focusedBorder = Border.None,
-            disabledBorder = Border(
-                border = BorderStroke(1.dp, Color.Gray)
-            )
-        )
+//        border = ButtonDefaults.border(
+//            border = Border.None,
+//            focusedBorder = Border.None,
+//            disabledBorder = Border.None
+//        )
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(

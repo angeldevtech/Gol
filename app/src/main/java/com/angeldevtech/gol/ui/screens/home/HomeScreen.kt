@@ -20,11 +20,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.Text
 import com.angeldevtech.gol.domain.models.ScheduleCategories
 import com.angeldevtech.gol.domain.models.ScheduleItem
-import com.angeldevtech.gol.ui.components.CategoryList
-import com.angeldevtech.gol.ui.components.ErrorContent
-import com.angeldevtech.gol.ui.components.HomeHeader
-import com.angeldevtech.gol.ui.components.LoadingContent
-import com.angeldevtech.gol.utils.RefreshOnResume
+import com.angeldevtech.gol.ui.components.tv.CategoryList
+import com.angeldevtech.gol.ui.components.tv.ErrorContent
+import com.angeldevtech.gol.ui.components.tv.HomeHeader
+import com.angeldevtech.gol.ui.components.tv.LoadingContent
 import com.angeldevtech.gol.utils.PeriodicTimeUpdateWhileResumed
 
 @Composable
@@ -38,8 +37,6 @@ fun HomeScreen(
         viewModel.onRefresh()
         onStopOrDispose {  }
     }
-
-    RefreshOnResume(viewModel)
 
     PeriodicTimeUpdateWhileResumed(viewModel)
 

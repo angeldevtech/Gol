@@ -34,8 +34,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.Button
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
-import com.angeldevtech.gol.ui.components.PlayerControlsOverlay
-import com.angeldevtech.gol.ui.components.VideoPlayer
+import com.angeldevtech.gol.ui.components.tv.PlayerControlsOverlay
+import com.angeldevtech.gol.ui.components.tv.VideoPlayer
 import com.angeldevtech.gol.utils.isDpadCenterKey
 import com.angeldevtech.gol.utils.isDpadMovementKey
 
@@ -52,16 +52,15 @@ fun PlayerScreen(
     BackHandler(onBack = onBack)
 
     LifecycleStartEffect(Unit) {
-        viewModel.loadItemContent()
-        onStopOrDispose {  }
+        viewModel.onLoad()
+        onStopOrDispose { viewModel.pausePlayer() }
     }
 
     val overlayButtonFocusRequester = remember { FocusRequester() }
 
     val successState = uiState as? PlayerUIState.Success
     val shouldTriggerInitialOverlayFocus = successState != null &&
-            successState.isOverlayVisible &&
-            !successState.isLoadingNewSource
+            successState.isOverlayVisible
 
     Box(
         modifier = Modifier
@@ -111,7 +110,7 @@ fun PlayerScreen(
                             Text(text = "Volver a la página de inicio")
                         }
                         Button(
-                            onClick = { viewModel.loadItemContent() }
+                            onClick = { viewModel.onLoad() }
                         ) {
                             Text(text = "Reintentar")
                         }
@@ -132,7 +131,7 @@ fun PlayerScreen(
                         viewModel = viewModel,
                         overlayButtonFocusRequester = overlayButtonFocusRequester,
                         initialFocusTrigger = shouldTriggerInitialOverlayFocus,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
             }
