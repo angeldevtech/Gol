@@ -44,6 +44,7 @@ fun PlayerControlsOverlay(
     overlayButtonFocusRequester: FocusRequester,
     initialFocusTrigger: Boolean,
     modifier: Modifier = Modifier,
+    isButtonEnabled: Boolean
 ) {
     val shouldFocusSourcesInitially by remember(initialFocusTrigger, state) {
         derivedStateOf {
@@ -115,9 +116,11 @@ fun PlayerControlsOverlay(
                 LargePlayPauseButton(
                     isPlaying = state.isPlaying,
                     onClick = { viewModel.togglePlayPause() },
+                    keepOverlay = { viewModel.showOverlayTemporarily() },
                     modifier = Modifier
                         .align(Alignment.Center)
                         .focusRequester(overlayButtonFocusRequester),
+                    isButtonEnabled = isButtonEnabled
                 )
                 LaunchedEffect(initialFocusTrigger) {
                     if (initialFocusTrigger) {

@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,16 +52,18 @@ fun PlayerScreen(
 
     BackHandler(onBack = onBack)
 
-    LifecycleStartEffect(Unit) {
-        viewModel.onLoad()
-        onStopOrDispose { viewModel.pausePlayer() }
-    }
-
     val overlayButtonFocusRequester = remember { FocusRequester() }
+    val isButtonEnabled = remember { mutableStateOf(true) }
 
     val successState = uiState as? PlayerUIState.Success
     val shouldTriggerInitialOverlayFocus = successState != null &&
             successState.isOverlayVisible
+
+    LifecycleStartEffect(Unit) {
+        viewModel.onLoad()
+        isButtonEnabled.value = true
+        onStopOrDispose { viewModel.pausePlayer() }
+    }
 
     Box(
         modifier = Modifier
@@ -68,12 +71,17 @@ fun PlayerScreen(
             .focusable()
             .onKeyEvent { keyEvent ->
                 if (keyEvent.type == KeyEventType.KeyDown && keyEvent.key.isDpadMovementKey()) {
+                    isButtonEnabled.value = true
                     viewModel.showOverlayTemporarily()
                     return@onKeyEvent false
                 }
                 if (keyEvent.type == KeyEventType.KeyDown && keyEvent.key.isDpadCenterKey()) {
+                    val currentSuccessState = uiState as? PlayerUIState.Success
+                    if (currentSuccessState != null && !currentSuccessState.isOverlayVisible) {
+                        isButtonEnabled.value = false
+                    }
                     viewModel.showOverlayTemporarily()
-                    return@onKeyEvent true
+                    return@onKeyEvent false
                 }
                 false
             }
@@ -132,6 +140,7 @@ fun PlayerScreen(
                         overlayButtonFocusRequester = overlayButtonFocusRequester,
                         initialFocusTrigger = shouldTriggerInitialOverlayFocus,
                         modifier = Modifier.fillMaxSize(),
+                        isButtonEnabled = isButtonEnabled.value
                     )
                 }
             }
