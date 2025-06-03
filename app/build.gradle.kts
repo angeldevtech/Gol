@@ -67,20 +67,11 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    composeCompiler{
-        reportsDestination = file("build/output/compose_reports")
-        metricsDestination = file("build/output/compose_metrics")
-    }
-    packaging{
-        resources.excludes.add("META-INF/versions/9/OSGI-INF/MANIFEST.MF")
-    }
 }
 
 dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.ui.tooling.preview)
-    debugImplementation(libs.androidx.ui.tooling)
 
     // UI
     implementation(libs.androidx.tv.material)
@@ -91,15 +82,12 @@ dependencies {
 
     // Ktor for HTTP
     implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
 
     // Kotlinx serialization
     implementation(libs.kotlinx.serialization.json)
-
-    // Lifecycle (to use rememberCoroutineScope safely)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
 
     // Image
     implementation(libs.coil.compose)
