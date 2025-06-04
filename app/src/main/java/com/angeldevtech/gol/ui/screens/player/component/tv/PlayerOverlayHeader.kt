@@ -1,4 +1,4 @@
-package com.angeldevtech.gol.ui.components.tv
+package com.angeldevtech.gol.ui.screens.player.component.tv
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

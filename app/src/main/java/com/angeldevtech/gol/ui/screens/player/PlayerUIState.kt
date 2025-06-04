@@ -13,5 +13,8 @@ sealed interface PlayerUIState {
         val error: String? = null,
         val isPlaying: Boolean = false,
     ) : PlayerUIState
-    data class Error(val message: String) : PlayerUIState
+    data class Error(
+        val message: String,
+        val returnHomeScreen: Boolean = false
+    ) : PlayerUIState
 }

@@ -9,16 +9,16 @@ data class ScheduleDto(
 
 @Serializable
 data class ScheduleItemDto(
-    val id: Int,
+    val id: Int?,
     val attributes: ScheduleAttributesDto
 )
 
 @Serializable
 data class ScheduleAttributesDto(
-    val diary_hour: String,
-    val diary_description: String,
-    val date_diary: String,
-    val deportes: String = "Desconocido",
+    val diary_hour: String = "23:59:59",
+    val diary_description: String = "Evento desconocido",
+    val date_diary: String = "Fecha desconocida",
+    val deportes: String = "Deporte desconocido",
     val embeds: EmbedWrapperDto = EmbedWrapperDto(emptyList()),
     val country: CountryWrapperDto = CountryWrapperDto()
 )
@@ -30,31 +30,30 @@ data class EmbedWrapperDto(
 
 @Serializable
 data class EmbedItemDto(
-    val id: Int,
+    val id: Int = 1,
     val attributes: EmbedAttributesDto = EmbedAttributesDto()
 )
 
 @Serializable
 data class EmbedAttributesDto(
     val embed_name: String = "Fuente desconocida",
-    val idioma: String = "",
+    val idioma: String = "Idioma desconocido",
     val embed_iframe: String = ""
 )
 
 @Serializable
 data class CountryWrapperDto(
-    val data: CountryDataDto = CountryDataDto(0)
+    val data: CountryDataDto = CountryDataDto()
 )
 
 @Serializable
 data class CountryDataDto(
-    val id: Int,
     val attributes: CountryAttributesDto = CountryAttributesDto()
 )
 
 @Serializable
 data class CountryAttributesDto(
-    val name: String = "Desconocido",
+    val name: String = "Liga desconocida",
     val image: ImageWrapperDto = ImageWrapperDto()
 )
 

@@ -9,8 +9,6 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import jakarta.inject.Inject
 
-const val apiBaseUrl = BuildConfig.API_BASE_URL
-
 class ApiServiceImpl @Inject constructor(
     private val lazyClient: Lazy<HttpClient>
 ): ApiService {
@@ -22,7 +20,7 @@ class ApiServiceImpl @Inject constructor(
 
     override suspend fun fetchSchedule(): List<ScheduleItemDto> {
         val response: ScheduleDto = client
-            .get(apiBaseUrl)
+            .get(BuildConfig.API_BASE_URL)
             .body()
         return response.data
     }

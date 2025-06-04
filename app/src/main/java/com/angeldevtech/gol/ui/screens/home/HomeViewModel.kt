@@ -37,6 +37,9 @@ class HomeViewModel @Inject constructor(
     private val _paletteCache = mutableStateMapOf<String, PaletteResult>()
     val paletteCache: Map<String, PaletteResult> get() = _paletteCache
 
+    private var lastRefreshTime = 0L
+    private val refreshIntervalMs = 3 * 60 * 60 * 1000L
+
     private fun observeSchedule() {
         _uiState.value = HomeUIState.Loading
 
@@ -103,7 +106,11 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onRefresh(force: Boolean = false) {
-        if (force || _uiState.value !is HomeUIState.Success) {
+        val currentTime = System.currentTimeMillis()
+        val shouldRefreshByTime = (currentTime - lastRefreshTime) > refreshIntervalMs
+
+        if (force || shouldRefreshByTime || _uiState.value !is HomeUIState.Success) {
+            lastRefreshTime = currentTime
             observeSchedule()
         }
     }
@@ -112,9 +119,9 @@ class HomeViewModel @Inject constructor(
         val currentState = _uiState.value
         if (currentState is HomeUIState.Success) {
             viewModelScope.launch(Dispatchers.Default) {
-                val relevantEvents = calculateCurrentOrUpcomingEvents(currentState.categories)
-                if (currentState.currentOrUpcomingEvents != relevantEvents) {
-                    _uiState.value = currentState.copy(currentOrUpcomingEvents = relevantEvents)
+                val currentOrUpcomingEvents = calculateCurrentOrUpcomingEvents(currentState.categories)
+                if (currentState.currentOrUpcomingEvents != currentOrUpcomingEvents) {
+                    _uiState.value = currentState.copy(currentOrUpcomingEvents = currentOrUpcomingEvents)
                 }
             }
         }

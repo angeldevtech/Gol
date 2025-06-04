@@ -1,12 +1,13 @@
 [versions]
-accompanistSwiperefresh = "0.27.0"
+accompanistSwiperefresh = "0.36.0"
 activityCompose = "1.10.1"
 agp = "8.10.1"
 coilCompose = "2.7.0"
 coreSplashscreen = "1.0.1"
 hiltAndroid = "2.56.2"
 jsoup = "1.20.1"
-kotlin = "2.0.21"
+kotlin = "2.1.21"
+ksp = "2.1.21-2.0.1"
 kotlinxSerializationJson = "1.8.1"
 ktorClientCore = "3.1.2"
 material3 = "1.4.0-alpha15"
@@ -41,7 +42,7 @@ ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorCli
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorClientCore" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorClientCore" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
-hilt_navigation_compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -49,4 +50,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin"}
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid"}
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

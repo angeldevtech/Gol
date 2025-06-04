@@ -9,9 +9,9 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-const val imgBaseUrl = BuildConfig.IMG_BASE_URL
-
 fun ScheduleItemDto.toSimplified(): ScheduleItem? {
+    if (id == null) return null
+
     val validEmbeds = attributes.embeds.data.mapNotNull { embed ->
         val decodedUrl = decodeEmbedUrl(embed.attributes.embed_iframe)
         decodedUrl?.let {
@@ -25,15 +25,14 @@ fun ScheduleItemDto.toSimplified(): ScheduleItem? {
 
     if (validEmbeds.isEmpty()) return null
 
-    val countryImageUrl = attributes.country.data.attributes.image.data.attributes.url.takeIf { it.isNotBlank() }
-    val fullImageUrl = countryImageUrl?.let { imgBaseUrl + it }
-        ?: ""
+    val fullImageUrl = attributes.country.data.attributes.image.data.attributes.url.takeIf { it.isNotBlank() }?.let { BuildConfig.IMG_BASE_URL + it } ?: ""
 
     return ScheduleItem(
         id = id,
         hour = attributes.diary_hour.trim(),
         name = attributes.diary_description.trim(),
-        date = getRelativeDay(attributes.date_diary),
+        date = attributes.date_diary.trim(),
+        relativeDate = getRelativeDay(attributes.date_diary.trim()),
         category = attributes.deportes.trim(),
         embeds = validEmbeds,
         leagueName = attributes.country.data.attributes.name.trim(),
@@ -65,11 +64,24 @@ fun decodeEmbedUrl(iframeUrl: String): String? {
 }
 
 fun getRelativeDay(dateStr: String): String {
+    if (dateStr == "Fecha desconocida") return dateStr
+
     return try {
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val itemDate = formatter.parse(dateStr)
-        val today = Calendar.getInstance()
-        val itemCal = Calendar.getInstance().apply { time = itemDate!! }
+        val itemDate = formatter.parse(dateStr) ?: return dateStr
+        val today = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        val itemCal = Calendar.getInstance().apply {
+            time = itemDate
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
 
         val diffDays = ((itemCal.timeInMillis - today.timeInMillis) / (1000 * 60 * 60 * 24)).toInt()
 

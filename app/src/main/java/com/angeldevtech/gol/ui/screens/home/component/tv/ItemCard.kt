@@ -1,4 +1,4 @@
-package com.angeldevtech.gol.ui.components.tv
+package com.angeldevtech.gol.ui.screens.home.component.tv
 
 import android.graphics.drawable.BitmapDrawable
 import androidx.compose.animation.animateColorAsState
@@ -111,7 +111,7 @@ fun ItemCard (
                             .padding(8.dp, 4.dp),
                     ) {
                         Text(
-                            text = item.date,
+                            text = item.relativeDate,
                             color = paletteResult.textColor,
                             fontWeight = FontWeight.Bold
                         )

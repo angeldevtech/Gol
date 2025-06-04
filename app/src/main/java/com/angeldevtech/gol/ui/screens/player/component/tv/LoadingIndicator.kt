@@ -1,4 +1,4 @@
-package com.angeldevtech.gol.ui.components.tv
+package com.angeldevtech.gol.ui.screens.player.component.tv
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator

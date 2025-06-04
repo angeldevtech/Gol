@@ -1,4 +1,4 @@
-package com.angeldevtech.gol.ui.components.tv
+package com.angeldevtech.gol.ui.screens.home.component.tv
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +15,7 @@ import androidx.tv.material3.Button
 import androidx.tv.material3.Text
 
 @Composable
-fun ErrorContent(
+fun ErrorHomeScreen(
     message: String,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier

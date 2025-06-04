@@ -1,4 +1,4 @@
-package com.angeldevtech.gol.ui.components.tv
+package com.angeldevtech.gol.ui.screens.home.component.tv
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -18,12 +18,11 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.angeldevtech.gol.R
 import com.angeldevtech.gol.ui.screens.home.HomeUIState
-import com.angeldevtech.gol.ui.screens.home.HomeViewModel
 
 @Composable
-fun HomeHeader(
+fun HeaderHomeScreen(
     uiState: HomeUIState,
-    viewModel: HomeViewModel,
+    refresh: () -> Unit,
     modifier: Modifier = Modifier
 ){
     Row(
@@ -50,7 +49,7 @@ fun HomeHeader(
 
         if (uiState is HomeUIState.Success) {
             Button(
-                onClick = { viewModel.onRefresh(true) },
+                onClick = refresh,
             ) {
                 Text(
                     text = "Actualizar"

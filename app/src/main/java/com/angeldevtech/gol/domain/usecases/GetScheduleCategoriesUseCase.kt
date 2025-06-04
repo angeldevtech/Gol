@@ -19,11 +19,10 @@ class GetScheduleCategoriesUseCase @Inject constructor(
                     .groupBy { it.category }
                     .map { (cat, items) ->
                         val sortedItems = items.sortedWith(
-                            compareBy<ScheduleItem> {
-                                it.date
-                            }.thenBy {
-                                it.hour
-                            }
+                            compareBy<ScheduleItem> { it.date == "Fecha desconocida" }
+                                .thenBy { it.date }
+                                .thenBy { it.hour == "23:59:59" }
+                                .thenBy { it.hour }
                         )
                         ScheduleCategories(cat, sortedItems)
                     }

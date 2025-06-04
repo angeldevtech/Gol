@@ -1,4 +1,4 @@
-package com.angeldevtech.gol.ui.components.tv
+package com.angeldevtech.gol.ui.screens.player.component.tv
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -34,11 +34,6 @@ fun LiveButton(
             focusedContainerColor = MaterialTheme.colorScheme.onSurface,
             focusedContentColor = MaterialTheme.colorScheme.surface,
         ),
-//        border = ButtonDefaults.border(
-//            border = Border.None,
-//            focusedBorder = Border.None,
-//            disabledBorder = Border.None
-//        )
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(

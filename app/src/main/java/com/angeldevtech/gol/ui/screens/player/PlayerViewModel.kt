@@ -37,6 +37,8 @@ class PlayerViewModel @Inject constructor(
     private var overlayAutoHideJob: Job? = null
     private var pauseTimerJob: Job? = null
     private val pauseThreshold = 2_000L
+    private var lastLoadTime = 0L
+    private val loadIntervalMs = 3 * 60 * 60 * 1000L
 
     private val playerListener = object : Player.Listener {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -108,7 +110,11 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun onLoad(){
-        if (_uiState.value !is PlayerUIState.Success){
+        val currentTime = System.currentTimeMillis()
+        val shouldLoadByTime = (currentTime - lastLoadTime) > loadIntervalMs
+
+        if (shouldLoadByTime || _uiState.value !is PlayerUIState.Success){
+            lastLoadTime = currentTime
             loadItemContent()
         } else {
             attemptPlayerRecovery()
@@ -120,14 +126,14 @@ class PlayerViewModel @Inject constructor(
             _uiState.value = PlayerUIState.Loading
 
             if (itemId == null) {
-                _uiState.value = PlayerUIState.Error("¡Ups! Hubo un error al pasar el id del evento")
+                _uiState.value = PlayerUIState.Error("¡Ups! Hubo un error al pasar el id del evento", true)
                 return@launch
             }
 
             val scheduleItem = getScheduleItemById(itemId)
 
             if (scheduleItem == null) {
-                _uiState.value = PlayerUIState.Error("¡Ups! No se pudo encontrar datos del evento")
+                _uiState.value = PlayerUIState.Error("¡Ups! No se pudo encontrar datos del evento, tal vez fue cancelado o ya finalizó", true)
                 return@launch
             }
 

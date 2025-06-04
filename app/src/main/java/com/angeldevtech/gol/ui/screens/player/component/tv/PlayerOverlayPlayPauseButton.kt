@@ -1,4 +1,4 @@
-package com.angeldevtech.gol.ui.components.tv
+package com.angeldevtech.gol.ui.screens.player.component.tv
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -16,12 +16,12 @@ import androidx.tv.material3.IconButton
 import androidx.tv.material3.IconButtonDefaults
 
 @Composable
-fun LargePlayPauseButton(
+fun PlayerOverlayPlayPauseButton(
     isPlaying: Boolean,
     onClick: () -> Unit,
     keepOverlay: () -> Unit,
-    modifier: Modifier = Modifier,
-    isButtonEnabled: Boolean
+    isButtonEnabled: Boolean,
+    modifier: Modifier = Modifier
 ) {
 
     val isFirstClick = remember { mutableStateOf(true) }

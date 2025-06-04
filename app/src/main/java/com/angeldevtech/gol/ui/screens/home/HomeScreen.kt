@@ -16,11 +16,11 @@ import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.angeldevtech.gol.domain.models.ScheduleCategories
 import com.angeldevtech.gol.domain.models.ScheduleItem
-import com.angeldevtech.gol.ui.components.tv.CategoryList
-import com.angeldevtech.gol.ui.components.tv.EmptyList
-import com.angeldevtech.gol.ui.components.tv.ErrorContent
-import com.angeldevtech.gol.ui.components.tv.HomeHeader
-import com.angeldevtech.gol.ui.components.tv.LoadingContent
+import com.angeldevtech.gol.ui.screens.home.component.tv.CategoryList
+import com.angeldevtech.gol.ui.screens.home.component.tv.EmptyList
+import com.angeldevtech.gol.ui.screens.home.component.tv.ErrorHomeScreen
+import com.angeldevtech.gol.ui.screens.home.component.tv.HeaderHomeScreen
+import com.angeldevtech.gol.ui.screens.home.component.tv.LoadingHomeScreen
 import com.angeldevtech.gol.utils.PeriodicTimeUpdateWhileResumed
 
 @Composable
@@ -47,15 +47,15 @@ fun HomeScreen(
             contentPadding = PaddingValues(vertical = 24.dp)
         ){
             item(contentType = "HomeHeader") {
-                HomeHeader(
+                HeaderHomeScreen(
                     uiState = uiState,
-                    viewModel = viewModel,
+                    refresh = { viewModel.onRefresh(true) },
                 )
             }
 
             when (val state = uiState){
                 is HomeUIState.Loading -> item(contentType = "LoadingContent") {
-                    LoadingContent(
+                    LoadingHomeScreen(
                         modifier = Modifier
                             .height(scope.maxHeight - 76.dp)
                             .fillMaxWidth()
@@ -89,7 +89,7 @@ fun HomeScreen(
                     }
                 }
                 is HomeUIState.Error -> item(contentType = "ErrorContent") {
-                    ErrorContent(
+                    ErrorHomeScreen(
                         message = state.message,
                         onRetry = { viewModel.onRefresh() },
                         modifier = Modifier

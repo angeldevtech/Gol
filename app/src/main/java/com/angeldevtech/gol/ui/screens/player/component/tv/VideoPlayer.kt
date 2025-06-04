@@ -1,4 +1,4 @@
-package com.angeldevtech.gol.ui.components.tv
+package com.angeldevtech.gol.ui.screens.player.component.tv
 
 import android.view.ViewGroup
 import android.view.Window
@@ -13,11 +13,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
-import com.angeldevtech.gol.ui.screens.player.PlayerUIState
 
 @Composable
 fun VideoPlayer(
-    state: PlayerUIState.Success,
+    isPlaying: Boolean,
     player: ExoPlayer,
     window: Window?,
 ) {
@@ -34,23 +33,21 @@ fun VideoPlayer(
         }
     }
 
-    DisposableEffect(state.isPlaying) {
-        if (window != null) {
-            if (state.isPlaying) {
-                window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            } else {
-                window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            }
-        }
-        onDispose { }
-    }
-
     DisposableEffect(player) {
         playerView.player = player
 
         onDispose {
             playerView.player = null
         }
+    }
+
+    DisposableEffect(isPlaying) {
+        if (isPlaying) {
+            window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        } else {
+            window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+        onDispose { }
     }
 
     DisposableEffect(Unit) {

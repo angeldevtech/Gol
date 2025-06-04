@@ -5,6 +5,7 @@ data class ScheduleItem(
     val hour: String,
     val name: String,
     val date: String,
+    val relativeDate: String,
     val category: String,
     val embeds: List<Embed>,
     val leagueName: String,

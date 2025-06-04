@@ -23,10 +23,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.angeldevtech.gol.ui.components.tv.ErrorPlayer
-import com.angeldevtech.gol.ui.components.tv.LoadingIndicator
-import com.angeldevtech.gol.ui.components.tv.PlayerControlsOverlay
-import com.angeldevtech.gol.ui.components.tv.VideoPlayer
+import com.angeldevtech.gol.ui.screens.player.component.tv.ErrorPlayerScreen
+import com.angeldevtech.gol.ui.screens.player.component.tv.LoadingIndicator
+import com.angeldevtech.gol.ui.screens.player.component.tv.PlayerControlsOverlay
+import com.angeldevtech.gol.ui.screens.player.component.tv.VideoPlayer
 import com.angeldevtech.gol.utils.isDpadCenterKey
 import com.angeldevtech.gol.utils.isDpadMovementKey
 
@@ -83,15 +83,19 @@ fun PlayerScreen(
                 )
             }
             is PlayerUIState.Error -> {
-                ErrorPlayer(
+                ErrorPlayerScreen(
                     state = state,
-                    viewModel = viewModel,
+                    retry = { viewModel.onLoad() },
                     onBack = onBack,
                     modifier = Modifier.fillMaxSize()
                 )
             }
             is PlayerUIState.Success -> {
-                VideoPlayer(state = state, window = window, player = player)
+                VideoPlayer(
+                    isPlaying = state.isPlaying,
+                    window = window,
+                    player = player
+                )
 
                 AnimatedVisibility(
                     visible = state.isOverlayVisible,
@@ -104,8 +108,8 @@ fun PlayerScreen(
                         viewModel = viewModel,
                         overlayButtonFocusRequester = overlayButtonFocusRequester,
                         initialFocusTrigger = shouldTriggerInitialOverlayFocus,
-                        modifier = Modifier.fillMaxSize(),
-                        isButtonEnabled = isButtonEnabled.value
+                        isButtonEnabled = isButtonEnabled.value,
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }

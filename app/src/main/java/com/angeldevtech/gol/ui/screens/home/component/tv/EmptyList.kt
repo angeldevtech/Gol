@@ -1,4 +1,4 @@
-package com.angeldevtech.gol.ui.components.tv
+package com.angeldevtech.gol.ui.screens.home.component.tv
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.MaterialTheme

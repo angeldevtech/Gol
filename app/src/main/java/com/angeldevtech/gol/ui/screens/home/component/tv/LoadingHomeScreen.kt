@@ -1,4 +1,4 @@
-package com.angeldevtech.gol.ui.components.tv
+package com.angeldevtech.gol.ui.screens.home.component.tv
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.angeldevtech.gol.utils.shimmerEffect
 
 @Composable
-fun LoadingContent(
+fun LoadingHomeScreen(
     modifier: Modifier = Modifier
 ) {
     Box(
