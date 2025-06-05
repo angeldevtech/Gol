@@ -1,10 +1,14 @@
 package com.angeldevtech.gol.navigation
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface as MobileSurface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.tv.material3.Surface as TvSurface
 import com.angeldevtech.gol.ui.screens.home.HomeScreen
 import com.angeldevtech.gol.ui.screens.home.MobileHomeScreen
 import com.angeldevtech.gol.ui.screens.player.MobilePlayerScreen
@@ -18,10 +22,18 @@ fun AppNavHost(
     val navController = rememberNavController()
     val isTv = deviceTypeProvider.isTvDevice
 
-    if (isTv) {
-        TvNavHost(navController)
+    if (isTv){
+        TvSurface(
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            TvNavHost(navController)
+        }
     } else {
-        MobileNavHost(navController)
+        MobileSurface(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            MobileNavHost(navController)
+        }
     }
 }
 

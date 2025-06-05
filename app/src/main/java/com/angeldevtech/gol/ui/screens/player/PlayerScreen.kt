@@ -52,7 +52,7 @@ fun PlayerScreen(
     LifecycleStartEffect(Unit) {
         viewModel.onLoad()
         isButtonEnabled.value = true
-        onStopOrDispose { viewModel.pausePlayer() }
+        onStopOrDispose { viewModel.stopPlayer() }
     }
 
     Box(

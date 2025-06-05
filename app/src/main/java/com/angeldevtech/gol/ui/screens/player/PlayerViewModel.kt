@@ -33,10 +33,14 @@ class PlayerViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<PlayerUIState>(PlayerUIState.Loading)
     val uiState: StateFlow<PlayerUIState> = _uiState.asStateFlow()
 
+    private val m3u8Cache = mutableMapOf<String, String>()
+
     private var player: ExoPlayer? = null
     private var overlayAutoHideJob: Job? = null
     private var pauseTimerJob: Job? = null
     private val pauseThreshold = 2_000L
+    private var pauseStartTime: Long = 0L
+    private var accumulatedPauseDuration: Long = 0L
     private var lastLoadTime = 0L
     private val loadIntervalMs = 3 * 60 * 60 * 1000L
 
@@ -51,6 +55,7 @@ class PlayerViewModel @Inject constructor(
                             isLoadingNewSource = false,
                         )
                     } else {
+                        accumulatePauseDuration()
                         cancelPauseTimer()
                         _uiState.value = currentState.copy(
                             isPlaying = true,
@@ -113,6 +118,8 @@ class PlayerViewModel @Inject constructor(
         val currentTime = System.currentTimeMillis()
         val shouldLoadByTime = (currentTime - lastLoadTime) > loadIntervalMs
 
+        if (shouldLoadByTime) m3u8Cache.clear()
+
         if (shouldLoadByTime || _uiState.value !is PlayerUIState.Success){
             lastLoadTime = currentTime
             loadItemContent()
@@ -140,9 +147,14 @@ class PlayerViewModel @Inject constructor(
             initializePlayer()
 
             if (player == null){
-                _uiState.value = PlayerUIState.Error("¡Ups! No se pudo iniciar el reproductor de video")
+                if (_uiState.value !is PlayerUIState.Error) {
+                    _uiState.value = PlayerUIState.Error("¡Ups! No se pudo iniciar el reproductor de video")
+                }
                 return@launch
             }
+            cancelOverlayAutoHide()
+            cancelPauseTimer()
+            resetPauseTime()
 
             _uiState.value = PlayerUIState.Success(scheduleItem, 0)
             loadContentForIndex(0)
@@ -162,7 +174,9 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun getPlayer(): ExoPlayer {
-        initializePlayer()
+        if (player == null) {
+            initializePlayer()
+        }
         return player!!
     }
 
@@ -199,8 +213,34 @@ class PlayerViewModel @Inject constructor(
                 try {
                     val embedUrl = currentState.scheduleItem.embeds[embedIndex].url
 
+                    val cachedM3u8Url = m3u8Cache[embedUrl]
+                    if (cachedM3u8Url != null) {
+                        val mediaItem = MediaItem.Builder()
+                            .setUri(cachedM3u8Url)
+                            .setMediaMetadata(
+                                MediaMetadata.Builder()
+                                    .setTitle(currentState.scheduleItem.name)
+                                    .setSubtitle(
+                                        currentState.scheduleItem.embeds.getOrNull(embedIndex)?.name
+                                            ?: currentState.scheduleItem.leagueName
+                                    )
+                                    .setArtist(currentState.scheduleItem.leagueName)
+                                    .build()
+                            )
+                            .build()
+
+                        player?.apply {
+                            setMediaItem(mediaItem)
+                            prepare()
+                            playWhenReady = true
+                        }
+                        return@launch
+                    }
+
                     extractM3u8UrlUseCase(embedUrl)
                         .onSuccess { m3u8Url ->
+                            m3u8Cache[embedUrl] = m3u8Url
+
                             val mediaItem = MediaItem.Builder()
                                 .setUri(m3u8Url)
                                 .setMediaMetadata(
@@ -230,7 +270,7 @@ class PlayerViewModel @Inject constructor(
                 } catch (e: Exception) {
                     _uiState.value = currentState.copy(
                         isLoadingNewSource = false,
-                        error = e.localizedMessage
+                        error = e.localizedMessage ?: "¡Ups! Hubo un error inesperado cargando el contenido."
                     )
                 }
             }
@@ -253,6 +293,7 @@ class PlayerViewModel @Inject constructor(
     fun seekToLive() {
         val currentState = _uiState.value
         if (currentState is PlayerUIState.Success) {
+            resetPauseTime()
             cancelPauseTimer()
             player?.let {
                 it.seekToDefaultPosition()
@@ -266,27 +307,33 @@ class PlayerViewModel @Inject constructor(
     fun showOverlayTemporarily() {
         val currentState = _uiState.value
         if (currentState is PlayerUIState.Success) {
-            if (overlayAutoHideJob != null){
-                _uiState.value = currentState.copy(
-                    isOverlayVisible = true
-                )
-                overlayAutoHideJob?.cancel()
+            if (!currentState.isOverlayVisible) {
+                _uiState.value = currentState.copy(isOverlayVisible = true)
             }
+            overlayAutoHideJob?.cancel()
             overlayAutoHideJob = hideOverlay()
         }
     }
 
     private fun startPauseTimer() {
-        if (pauseTimerJob?.isCompleted == true){
+        if (pauseTimerJob?.isCompleted == true) {
             return
         }
+        pauseStartTime = System.currentTimeMillis()
         pauseTimerJob?.cancel()
         pauseTimerJob = viewModelScope.launch {
-            delay(pauseThreshold)
+            delay((pauseThreshold - accumulatedPauseDuration).coerceAtLeast(0))
             val currentState = _uiState.value
             if (currentState is PlayerUIState.Success && !currentState.isPlaying) {
                 _uiState.value = currentState.copy(isLive = false)
             }
+        }
+    }
+
+    private fun accumulatePauseDuration() {
+        if (pauseStartTime != 0L){
+            val currentTime = System.currentTimeMillis()
+            accumulatedPauseDuration += (currentTime - pauseStartTime)
         }
     }
 
@@ -312,9 +359,16 @@ class PlayerViewModel @Inject constructor(
         pauseTimerJob = null
     }
 
-    fun pausePlayer() {
+    private fun resetPauseTime() {
+        pauseStartTime = 0L
+        accumulatedPauseDuration = 0L
+    }
+
+    fun stopPlayer() {
         val currentState = _uiState.value
         if (currentState is PlayerUIState.Success) {
+            resetPauseTime()
+            cancelPauseTimer()
             player?.apply {
                 stop()
             }

@@ -62,16 +62,14 @@ fun HomeScreen(
                     )
                 }
                 is HomeUIState.Success -> {
-                    if (state.currentOrUpcomingEvents.isNotEmpty()){
-                        item(contentType = "currentOrUpcomingEvents") {
+                    if (state.categories.isNotEmpty()){
+                        item(contentType = "CurrentOrUpcomingEvents") {
                             CategoryList(
                                 ScheduleCategories(name = "En juego y en breve", items = state.currentOrUpcomingEvents),
                                 viewModel,
                                 onItemSelected = onItemSelected
                             )
                         }
-                    }
-                    if (state.categories.isNotEmpty()){
                         items(
                             state.categories,
                             contentType = { "CategoryList" }

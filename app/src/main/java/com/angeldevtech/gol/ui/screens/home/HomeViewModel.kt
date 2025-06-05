@@ -21,6 +21,7 @@ import com.angeldevtech.gol.domain.models.ScheduleItem
 import com.angeldevtech.gol.utils.PaletteResult
 import com.angeldevtech.gol.utils.WhiteFilter
 import com.angeldevtech.gol.utils.isLightColor
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.withContext
 import java.time.LocalTime
@@ -37,6 +38,9 @@ class HomeViewModel @Inject constructor(
     private val _paletteCache = mutableStateMapOf<String, PaletteResult>()
     val paletteCache: Map<String, PaletteResult> get() = _paletteCache
 
+    private val _isPullToRefreshing = MutableStateFlow(false)
+    val isPullToRefreshing: StateFlow<Boolean> = _isPullToRefreshing.asStateFlow()
+
     private var lastRefreshTime = 0L
     private val refreshIntervalMs = 3 * 60 * 60 * 1000L
 
@@ -47,6 +51,7 @@ class HomeViewModel @Inject constructor(
             val result = refreshSchedule()
 
             if (result.isFailure) {
+                _isPullToRefreshing.value = false
                 withContext(Dispatchers.Main) {
                     _uiState.value = HomeUIState.Error("¡Ups! Hubo un error al obtener los eventos")
                 }
@@ -55,6 +60,7 @@ class HomeViewModel @Inject constructor(
 
             getScheduleCategories()
                 .catch {
+                    _isPullToRefreshing.value = false
                     withContext(Dispatchers.Main) {
                         _uiState.value =
                             HomeUIState.Error("¡Ups! Hubo un error procesando las categorías")
@@ -65,12 +71,14 @@ class HomeViewModel @Inject constructor(
                         onSuccess = { categories ->
                             val currentOrUpcomingEvents =
                                 calculateCurrentOrUpcomingEvents(categories)
+                            _isPullToRefreshing.value = false
                             withContext(Dispatchers.Main) {
                                 _uiState.value =
                                     HomeUIState.Success(categories, currentOrUpcomingEvents)
                             }
                         },
                         onFailure = {
+                            _isPullToRefreshing.value = false
                             withContext(Dispatchers.Main) {
                                 _uiState.value =
                                     HomeUIState.Error("¡Ups! Hubo un error al obtener los eventos ordenados")
@@ -108,6 +116,10 @@ class HomeViewModel @Inject constructor(
     fun onRefresh(force: Boolean = false) {
         val currentTime = System.currentTimeMillis()
         val shouldRefreshByTime = (currentTime - lastRefreshTime) > refreshIntervalMs
+
+        if (force) {
+            _isPullToRefreshing.value = true
+        }
 
         if (force || shouldRefreshByTime || _uiState.value !is HomeUIState.Success) {
             lastRefreshTime = currentTime

@@ -15,13 +15,11 @@ fun Theme(
     if (deviceTypeProvider.isTvDevice) {
         TvMaterialTheme(
             colorScheme = tvDarkColorScheme(),
-            typography = TvMaterialTheme.typography,
             content = content
         )
     } else {
         MobileMaterialTheme(
             colorScheme = mobileDarkColorScheme(),
-            typography = MobileMaterialTheme.typography,
             content = content
         )
     }
