@@ -35,6 +35,7 @@ class PlayerViewModel @Inject constructor(
 
     private val m3u8Cache = mutableMapOf<String, String>()
 
+    private var seekToLiveTriggered: Boolean = false
     private var player: ExoPlayer? = null
     private var overlayAutoHideJob: Job? = null
     private var pauseTimerJob: Job? = null
@@ -62,6 +63,7 @@ class PlayerViewModel @Inject constructor(
                             isLoadingNewSource = false,
                             isLive = true
                         )
+                        seekToLiveTriggered = false
                     }
                     showOverlayTemporarily()
                 } else {
@@ -76,6 +78,8 @@ class PlayerViewModel @Inject constructor(
         override fun onPlayerError(error: PlaybackException) {
             cancelOverlayAutoHide()
             cancelPauseTimer()
+            resetPauseTime()
+            seekToLiveTriggered = false
 
             val errorMessage = when (error.errorCode) {
                 PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED,
@@ -295,6 +299,7 @@ class PlayerViewModel @Inject constructor(
         if (currentState is PlayerUIState.Success) {
             resetPauseTime()
             cancelPauseTimer()
+            seekToLiveTriggered = true
             player?.let {
                 it.seekToDefaultPosition()
                 if (!it.isPlaying) {
@@ -331,7 +336,7 @@ class PlayerViewModel @Inject constructor(
     }
 
     private fun accumulatePauseDuration() {
-        if (pauseStartTime != 0L){
+        if (pauseStartTime != 0L && !seekToLiveTriggered){
             val currentTime = System.currentTimeMillis()
             accumulatedPauseDuration += (currentTime - pauseStartTime)
         }
