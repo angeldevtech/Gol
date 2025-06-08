@@ -21,14 +21,18 @@ class GetScheduleCategoriesUseCase @Inject constructor(
                         val sortedItems = items.sortedWith(
                             compareBy<ScheduleItem> { it.date == "Fecha desconocida" }
                                 .thenBy { it.date }
-                                .thenBy { it.hour == "23:59:59" }
+                                .thenBy { it.hour == "Hora desconocida" }
                                 .thenBy { it.hour }
                         )
                         ScheduleCategories(cat, sortedItems)
                     }
-                    .let { categories ->
-                        val (futbol, others) = categories.partition { it.name == "Futbol" }
-                        futbol + others
+                    .sortedBy { category ->
+                        when (category.name) {
+                            "Futbol" -> 0
+                            "Otros" -> Int.MAX_VALUE - 1
+                            "Deporte desconocido" -> Int.MAX_VALUE
+                            else -> 1
+                        }
                     }
                 Result.success(categories)
             }

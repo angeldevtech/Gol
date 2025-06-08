@@ -7,6 +7,7 @@ import com.angeldevtech.gol.data.repositories.PlayerRepositoryImpl
 import com.angeldevtech.gol.data.repositories.ScheduleRepositoryImpl
 import com.angeldevtech.gol.domain.repositories.PlayerRepository
 import com.angeldevtech.gol.domain.repositories.ScheduleRepository
+import com.angeldevtech.gol.utils.DateChangeObserver
 import com.angeldevtech.gol.utils.DeviceTypeProvider
 import dagger.Module
 import dagger.Provides
@@ -17,6 +18,9 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.serialization.json.Json
 import javax.inject.Singleton
 
@@ -45,8 +49,24 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideScheduleRepository(apiService: ApiService): ScheduleRepository {
-        return ScheduleRepositoryImpl(apiService)
+    fun provideApplicationScope(): CoroutineScope {
+        return CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDateChangeObserver(@ApplicationContext context: Context): DateChangeObserver {
+        return DateChangeObserver(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideScheduleRepository(
+        apiService: ApiService,
+        dateChangeObserver: DateChangeObserver,
+        applicationScope: CoroutineScope
+    ): ScheduleRepository {
+        return ScheduleRepositoryImpl(apiService, dateChangeObserver, applicationScope)
     }
 
     @Provides

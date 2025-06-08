@@ -15,7 +15,7 @@ data class ScheduleItemDto(
 
 @Serializable
 data class ScheduleAttributesDto(
-    val diary_hour: String = "23:59:59",
+    val diary_hour: String = "Hora desconocida",
     val diary_description: String = "Evento desconocido",
     val date_diary: String = "Fecha desconocida",
     val deportes: String = "Deporte desconocido",

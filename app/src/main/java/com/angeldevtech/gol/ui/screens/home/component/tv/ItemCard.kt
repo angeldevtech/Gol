@@ -111,7 +111,7 @@ fun ItemCard (
                             .padding(8.dp, 4.dp),
                     ) {
                         Text(
-                            text = item.relativeDate,
+                            text = item.relativeDay,
                             color = paletteResult.textColor,
                             fontWeight = FontWeight.Bold
                         )

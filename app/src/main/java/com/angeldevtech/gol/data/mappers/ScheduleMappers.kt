@@ -6,8 +6,8 @@ import com.angeldevtech.gol.data.models.ScheduleItemDto
 import com.angeldevtech.gol.domain.models.Embed
 import com.angeldevtech.gol.domain.models.ScheduleItem
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Locale
+import java.util.TimeZone
 
 fun ScheduleItemDto.toSimplified(): ScheduleItem? {
     if (id == null) return null
@@ -25,14 +25,16 @@ fun ScheduleItemDto.toSimplified(): ScheduleItem? {
 
     if (validEmbeds.isEmpty()) return null
 
+    val (localDate, localTime) = processApiDateTime(attributes.date_diary, attributes.diary_hour)
+
     val fullImageUrl = attributes.country.data.attributes.image.data.attributes.url.takeIf { it.isNotBlank() }?.let { BuildConfig.IMG_BASE_URL + it } ?: ""
 
     return ScheduleItem(
         id = id,
-        hour = attributes.diary_hour.trim(),
+        hour = localTime,
         name = attributes.diary_description.trim(),
-        date = attributes.date_diary.trim(),
-        relativeDate = getRelativeDay(attributes.date_diary.trim()),
+        date = localDate,
+        relativeDay = localDate,
         category = attributes.deportes.trim(),
         embeds = validEmbeds,
         leagueName = attributes.country.data.attributes.name.trim(),
@@ -63,35 +65,25 @@ fun decodeEmbedUrl(iframeUrl: String): String? {
     }
 }
 
-fun getRelativeDay(dateStr: String): String {
-    if (dateStr == "Fecha desconocida") return dateStr
+private fun processApiDateTime(dateStr: String, timeStr: String): Pair<String, String> {
+    if (dateStr == "Fecha desconocida" || timeStr == "Hora desconocida") return Pair(dateStr, timeStr)
 
     return try {
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val itemDate = formatter.parse(dateStr) ?: return dateStr
-        val today = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
+        val utcFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+            timeZone = TimeZone.getTimeZone("America/Lima")
+            isLenient = false
         }
-        val itemCal = Calendar.getInstance().apply {
-            time = itemDate
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
+        val combinedDateTime = "${dateStr.trim()} ${timeStr.trim()}"
+        val utcDate = utcFormatter.parse(combinedDateTime) ?: return Pair(dateStr, timeStr)
+
+        val localFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).apply {
+            timeZone = TimeZone.getDefault()
         }
 
-        val diffDays = ((itemCal.timeInMillis - today.timeInMillis) / (1000 * 60 * 60 * 24)).toInt()
-
-        when (diffDays) {
-            0 -> "HOY"
-            1 -> "MAÑANA"
-            -1 -> "AYER"
-            else -> dateStr
-        }
+        val localDateTime = localFormatter.format(utcDate)
+        val parts = localDateTime.split(" ")
+        Pair(parts[0], parts[1])
     } catch (e: Exception) {
-        dateStr
+        Pair(dateStr, timeStr)
     }
 }
