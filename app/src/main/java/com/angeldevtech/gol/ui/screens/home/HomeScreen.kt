@@ -8,8 +8,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleStartEffect
@@ -22,6 +26,7 @@ import com.angeldevtech.gol.ui.screens.home.component.tv.ErrorHomeScreen
 import com.angeldevtech.gol.ui.screens.home.component.tv.HeaderHomeScreen
 import com.angeldevtech.gol.ui.screens.home.component.tv.LoadingHomeScreen
 import com.angeldevtech.gol.utils.PeriodicTimeUpdateWhileResumed
+import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen(
@@ -30,6 +35,10 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val initialListFocusRequester = remember { FocusRequester() }
+    val errorButtonFocusRequester = remember { FocusRequester() }
+    val headerRefreshButtonFocusRequester = remember { FocusRequester() }
+
     LifecycleStartEffect(Unit) {
         viewModel.onRefresh()
         onStopOrDispose {  }
@@ -37,19 +46,47 @@ fun HomeScreen(
 
     PeriodicTimeUpdateWhileResumed(viewModel)
 
+    val focusEffectKey = remember(uiState) {
+        when (val state = uiState) {
+            is HomeUIState.Success -> "Success:${state.categories.isNotEmpty()}"
+            is HomeUIState.Error -> "Error"
+            is HomeUIState.Loading -> "Loading"
+        }
+    }
+
+    LaunchedEffect(focusEffectKey) {
+        when (val state = uiState) {
+            is HomeUIState.Success -> {
+                if (state.categories.isNotEmpty()) {
+                    delay(100)
+                    initialListFocusRequester.requestFocus()
+                } else {
+                    headerRefreshButtonFocusRequester.requestFocus()
+                }
+            }
+            is HomeUIState.Error -> {
+                errorButtonFocusRequester.requestFocus()
+            }
+            else -> { /* No focus action needed for Loading */ }
+        }
+    }
+
     BoxWithConstraints(
         modifier = Modifier.fillMaxSize()
     ) {
         val scope = this
 
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(vertical = 24.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .focusRestorer(),
+            contentPadding = PaddingValues(vertical = 24.dp),
         ){
             item(contentType = "HomeHeader") {
                 HeaderHomeScreen(
                     uiState = uiState,
                     refresh = { viewModel.onRefresh(true) },
+                    refreshButtonFocusRequester = headerRefreshButtonFocusRequester
                 )
             }
 
@@ -63,18 +100,35 @@ fun HomeScreen(
                 }
                 is HomeUIState.Success -> {
                     if (state.categories.isNotEmpty()){
-                        item(contentType = "CurrentOrUpcomingEvents") {
+                        val initialFocusKey = state.currentOrUpcomingEvents.firstOrNull()?.id ?: state.categories.firstOrNull()?.items?.firstOrNull()?.id
+
+                        val initialFocusCategoryName = if (state.currentOrUpcomingEvents.isNotEmpty()) {
+                            "En juego y en breve"
+                        } else {
+                            state.categories.firstOrNull { it.items.isNotEmpty() }?.name
+                        }
+
+                        item(key = "En juego y en breve", contentType = "CurrentOrUpcomingEvents") {
                             CategoryList(
                                 ScheduleCategories(name = "En juego y en breve", items = state.currentOrUpcomingEvents),
                                 viewModel,
-                                onItemSelected = onItemSelected
+                                onItemSelected = onItemSelected,
+                                initialFocusRequester = if ("En juego y en breve" == initialFocusCategoryName) initialListFocusRequester else null,
+                                initialFocusKey = if ("En juego y en breve" == initialFocusCategoryName) initialFocusKey else null
                             )
                         }
                         items(
                             state.categories,
+                            key = { it.name },
                             contentType = { "CategoryList" }
                         ) { category ->
-                            CategoryList(category, viewModel, onItemSelected = onItemSelected)
+                            CategoryList(
+                                category,
+                                viewModel,
+                                onItemSelected = onItemSelected,
+                                initialFocusRequester = if (category.name == initialFocusCategoryName) initialListFocusRequester else null,
+                                initialFocusKey = if (category.name == initialFocusCategoryName) initialFocusKey else null
+                            )
                         }
                     } else {
                         item(contentType = "EmptyList") {
@@ -90,6 +144,7 @@ fun HomeScreen(
                     ErrorHomeScreen(
                         message = state.message,
                         onRetry = { viewModel.onRefresh() },
+                        retryButtonFocusRequester = errorButtonFocusRequester,
                         modifier = Modifier
                             .height(scope.maxHeight - 100.dp)
                             .fillMaxWidth()

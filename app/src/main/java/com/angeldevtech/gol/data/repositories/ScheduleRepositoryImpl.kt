@@ -22,7 +22,7 @@ class ScheduleRepositoryImpl @Inject constructor(
 ): ScheduleRepository {
     private val rawScheduleFlow = MutableStateFlow<List<ScheduleItem>>(emptyList())
 
-    private val _scheduleFlow: StateFlow<List<ScheduleItem>> = combine(
+    private val _scheduleFlow: StateFlow<List<ScheduleItem>?> = combine(
         rawScheduleFlow,
         dateChangeObserver.onDateChanged.onStart { emit(Unit) }
     ) { items, _ ->
@@ -32,10 +32,10 @@ class ScheduleRepositoryImpl @Inject constructor(
     }.stateIn(
         scope = externalScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = emptyList()
+        initialValue = null
     )
 
-    override fun observeSchedule(): StateFlow<List<ScheduleItem>> = _scheduleFlow
+    override fun observeSchedule(): StateFlow<List<ScheduleItem>?> = _scheduleFlow
 
     override suspend fun refreshSchedule(): Result<Unit> {
         return try {
@@ -49,6 +49,6 @@ class ScheduleRepositoryImpl @Inject constructor(
     }
 
     override fun getItemById(id: Int): ScheduleItem? {
-        return _scheduleFlow.value.find { it.id == id }
+        return _scheduleFlow.value?.find { it.id == id }
     }
 }

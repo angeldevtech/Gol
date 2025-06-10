@@ -24,6 +24,8 @@ import com.angeldevtech.gol.utils.isLightColor
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 @HiltViewModel
@@ -94,23 +96,24 @@ class HomeViewModel @Inject constructor(
             return emptyList()
         }
 
-        val now = LocalTime.now()
-        val windowStart = now.minusMinutes(30)
+        val now = LocalDateTime.now()
+        val windowStart = now.minusMinutes(38)
         val windowEnd = now.plusMinutes(30)
 
         return categories
             .flatMap { it.items }
             .filter { item ->
-                val eventTime = runCatching { LocalTime.parse(item.hour) }.getOrNull()
-                eventTime?.let {
-                    if (windowStart > windowEnd) {
-                        it >= windowStart || it <= windowEnd
-                    } else {
-                        it in windowStart..windowEnd
-                    }
+                val eventDateTime = runCatching {
+                    LocalDateTime.of(
+                        LocalDate.parse(item.date),
+                        LocalTime.parse(item.hour)
+                    )
+                }.getOrNull()
+                eventDateTime?.let {
+                    it in windowStart..windowEnd
                 } == true
             }
-            .sortedBy { it.hour }
+            .sortedWith(compareBy({ it.date }, { it.hour }))
     }
 
     fun onRefresh(force: Boolean = false) {
