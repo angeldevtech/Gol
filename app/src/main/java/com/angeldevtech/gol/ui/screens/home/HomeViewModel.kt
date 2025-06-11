@@ -97,23 +97,36 @@ class HomeViewModel @Inject constructor(
         }
 
         val now = LocalDateTime.now()
-        val windowStart = now.minusMinutes(30)
-        val windowEnd = now.plusMinutes(30)
+        val defaultWindowStart = now.minusMinutes(30)
+        val defaultWindowEnd = now.plusMinutes(30)
+        val soccerWindowStart = now.minusMinutes(115)
 
         return categories
-            .flatMap { it.items }
-            .filter { item ->
+            .asSequence()
+            .flatMap { it.items.asSequence() }
+            .mapNotNull { item ->
                 val eventDateTime = runCatching {
                     LocalDateTime.of(
                         LocalDate.parse(item.date),
                         LocalTime.parse(item.hour)
                     )
-                }.getOrNull()
-                eventDateTime?.let {
-                    it in windowStart..windowEnd
-                } == true
+                }.getOrNull() ?: return@mapNotNull null
+
+                val windowStart = if (item.category.equals("Futbol", ignoreCase = true)) {
+                    soccerWindowStart
+                } else {
+                    defaultWindowStart
+                }
+
+                if (eventDateTime in windowStart..defaultWindowEnd) {
+                    item to eventDateTime
+                } else {
+                    null
+                }
             }
-            .sortedWith(compareBy({ it.date }, { it.hour }))
+            .sortedWith(compareBy({ it.second }, { it.first.date }, { it.first.hour }))
+            .map { it.first }
+            .toList()
     }
 
     fun onRefresh(force: Boolean = false) {
