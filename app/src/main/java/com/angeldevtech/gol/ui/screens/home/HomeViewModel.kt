@@ -97,7 +97,7 @@ class HomeViewModel @Inject constructor(
         }
 
         val now = LocalDateTime.now()
-        val windowStart = now.minusMinutes(38)
+        val windowStart = now.minusMinutes(30)
         val windowEnd = now.plusMinutes(30)
 
         return categories

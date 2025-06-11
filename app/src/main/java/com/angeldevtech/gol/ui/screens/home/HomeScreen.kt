@@ -10,10 +10,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRestorer
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleStartEffect
@@ -26,7 +30,6 @@ import com.angeldevtech.gol.ui.screens.home.component.tv.ErrorHomeScreen
 import com.angeldevtech.gol.ui.screens.home.component.tv.HeaderHomeScreen
 import com.angeldevtech.gol.ui.screens.home.component.tv.LoadingHomeScreen
 import com.angeldevtech.gol.utils.PeriodicTimeUpdateWhileResumed
-import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen(
@@ -35,6 +38,7 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val focusManager = LocalFocusManager.current
     val initialListFocusRequester = remember { FocusRequester() }
     val errorButtonFocusRequester = remember { FocusRequester() }
     val headerRefreshButtonFocusRequester = remember { FocusRequester() }
@@ -46,6 +50,8 @@ fun HomeScreen(
 
     PeriodicTimeUpdateWhileResumed(viewModel)
 
+    var lastFocusedState by rememberSaveable { mutableStateOf<String?>(null) }
+
     val focusEffectKey = remember(uiState) {
         when (val state = uiState) {
             is HomeUIState.Success -> "Success:${state.categories.isNotEmpty()}"
@@ -55,19 +61,24 @@ fun HomeScreen(
     }
 
     LaunchedEffect(focusEffectKey) {
-        when (val state = uiState) {
-            is HomeUIState.Success -> {
-                if (state.categories.isNotEmpty()) {
-                    delay(100)
-                    initialListFocusRequester.requestFocus()
-                } else {
-                    headerRefreshButtonFocusRequester.requestFocus()
+        if (lastFocusedState != focusEffectKey) {
+            when (val state = uiState) {
+                is HomeUIState.Success -> {
+                    if (state.categories.isNotEmpty()) {
+                        initialListFocusRequester.requestFocus()
+                    } else {
+                        headerRefreshButtonFocusRequester.requestFocus()
+                    }
+                    lastFocusedState = focusEffectKey
+                }
+                is HomeUIState.Error -> {
+                    errorButtonFocusRequester.requestFocus()
+                    lastFocusedState = focusEffectKey
+                }
+                is HomeUIState.Loading -> {
+                    focusManager.clearFocus()
                 }
             }
-            is HomeUIState.Error -> {
-                errorButtonFocusRequester.requestFocus()
-            }
-            else -> { /* No focus action needed for Loading */ }
         }
     }
 
