@@ -1,19 +1,16 @@
-package com.angeldevtech.gol.ui.screens.player.component.tv
+package com.angeldevtech.gol.ui.screens.player.component.mobile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -21,24 +18,27 @@ import com.angeldevtech.gol.ui.screens.player.PlayerUIState
 import com.angeldevtech.gol.ui.screens.player.PlayerViewModel
 
 @Composable
-fun PlayerControlsOverlay(
+fun PlayerControlsOverlayMobile(
     state: PlayerUIState.Success,
     viewModel: PlayerViewModel,
-    overlayButtonFocusRequester: FocusRequester,
-    initialFocusTrigger: Boolean,
-    isButtonEnabled: Boolean,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val shouldFocusSourcesInitially by remember(initialFocusTrigger, state.isLoadingNewSource) {
-        derivedStateOf {
-            initialFocusTrigger && state.isLoadingNewSource
-        }
-    }
-
     Box(modifier = modifier.background(Color.Black.copy(alpha = 0.4f))) {
-        PlayerOverlayHeader(
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = { viewModel.hideOverlay(0) }
+                )
+        )
+
+        PlayerOverlayHeaderMobile(
             name = state.scheduleItem.name,
             category = state.scheduleItem.category,
+            onBackClick = onBackClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
@@ -49,7 +49,7 @@ fun PlayerControlsOverlay(
                         )
                     )
                 )
-                .padding(horizontal = 48.dp, vertical = 24.dp)
+                .padding(horizontal = 16.dp, vertical = 16.dp)
         )
 
         if(state.isLoadingNewSource) {
@@ -58,48 +58,26 @@ fun PlayerControlsOverlay(
                     .align(Alignment.Center)
             )
         } else if (state.error != null) {
-            PlayerOverlayError(
+            PlayerOverlayErrorMobile(
                 error = state.error,
                 attemptRecovery = { viewModel.attemptPlayerRecovery() },
-                overlayButtonFocusRequester = overlayButtonFocusRequester,
                 modifier = Modifier.fillMaxSize()
             )
-            LaunchedEffect(initialFocusTrigger) {
-                if (initialFocusTrigger) {
-                    overlayButtonFocusRequester.requestFocus()
-                }
-            }
         } else {
-            PlayerOverlayPlayPauseButton(
+            PlayerOverlayPlayPauseButtonMobile(
                 isPlaying = state.isPlaying,
                 onClick = { viewModel.togglePlayPause() },
-                keepOverlay = { viewModel.showOverlayTemporarily() },
-                isButtonEnabled = isButtonEnabled,
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .focusRequester(overlayButtonFocusRequester)
+                modifier = Modifier.align(Alignment.Center)
             )
-            LaunchedEffect(initialFocusTrigger) {
-                if (initialFocusTrigger) {
-                    overlayButtonFocusRequester.requestFocus()
-                }
-            }
         }
 
-        PlayerOverlaySources(
+        PlayerOverlaySourcesMobile(
             state = state,
             viewModel = viewModel,
-            overlayButtonFocusRequester = overlayButtonFocusRequester,
-            shouldFocusSourcesInitially = shouldFocusSourcesInitially,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .padding(horizontal = 48.dp, vertical = 24.dp),
         )
-        LaunchedEffect(shouldFocusSourcesInitially) {
-            if (shouldFocusSourcesInitially) {
-                overlayButtonFocusRequester.requestFocus()
-            }
-        }
     }
 }

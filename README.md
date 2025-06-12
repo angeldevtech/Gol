@@ -16,12 +16,12 @@
 
 ### Mobile
 
-Coming soon!
+![MOBILE UI](screenshots/mobile_ui.jpg)
 
 ## 🧩 Features
 
 * 📺 Native support for **Android TV** and **mobile**
-* ⏰ Event times auto-adjusted to **Peru time (GMT-5)**
+* ⏰ Event times auto-adjusted to your timezone
 * 🏅 Focus on **sports events** across multiple categories
 * ✨ Modern UI with **Jetpack Compose**
 

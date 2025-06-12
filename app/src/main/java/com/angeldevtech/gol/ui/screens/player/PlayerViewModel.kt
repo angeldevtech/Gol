@@ -87,14 +87,7 @@ class PlayerViewModel @Inject constructor(
                 PlaybackException.ERROR_CODE_IO_UNSPECIFIED -> "¡Ups! Hay un error de internet, por favor revisa tu conexión."
 
                 PlaybackException.ERROR_CODE_IO_FILE_NOT_FOUND -> "¡Ups! El segmento de la transmisión no fue encontrado (404) o está inestable."
-                PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS -> {
-                    val cause = error.cause
-                    if (cause is HttpDataSource.InvalidResponseCodeException) {
-                        "¡Ups! Error HTTP ${cause.responseCode}. La transmisión podría no estar disponible."
-                    } else {
-                        "¡Ups! Error de red al obtener datos de la transmisión."
-                    }
-                }
+                PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS -> "¡Ups! Error de red al obtener datos de la transmisión."
 
                 PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED,
                 PlaybackException.ERROR_CODE_PARSING_MANIFEST_MALFORMED -> "¡Ups! Hubo un error al analizar los datos de la transmisión."
@@ -342,9 +335,9 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    private fun hideOverlay(): Job {
+    fun hideOverlay(time: Long = 5000): Job {
         return viewModelScope.launch {
-            delay(5000)
+            delay(time)
             val currentState = _uiState.value
             if (currentState is PlayerUIState.Success) {
                 _uiState.value = currentState.copy(

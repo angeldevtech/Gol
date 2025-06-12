@@ -16,12 +16,12 @@
 
 ### Móvil
 
-¡Próximamente!
+![MOBILE UI](screenshots/mobile_ui.jpg)
 
 ## 🧩 Funcionalidades
 
 * 📺 Soporte nativo para **Android TV** y **móviles**
-* ⏰ Horarios ajustados automáticamente a la **hora local del Perú (GMT-5)**
+* ⏰ Horarios ajustados automáticamente a la su zona horaria
 * 🏅 Enfoque en **eventos deportivos** de diversas categorías
 * ✨ Interfaz moderna usando **Jetpack Compose**
 
