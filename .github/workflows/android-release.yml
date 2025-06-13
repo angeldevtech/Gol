@@ -58,6 +58,7 @@ jobs:
 
       - name: Configure Keystore in Gradle Properties
         run: |
+          echo "" >> gradle.properties
           echo "android.injected.signing.store.file=$(pwd)/main-keystore.jks" >> gradle.properties
           echo "android.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }}" >> gradle.properties
           echo "android.injected.signing.key.alias=${{ secrets.KEY_ALIAS }}" >> gradle.properties
