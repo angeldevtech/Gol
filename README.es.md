@@ -29,9 +29,9 @@
 
 ## 📦 Descargar
 
-> 🔜 Los archivos APK estarán disponibles próximamente.
+Descarga el archivo APK e instálalo en tu dispositivo Android o Android TV.
 
-Por ahora, puedes clonar el repositorio y compilarlo localmente, o instalar versiones de prueba desde la pestaña [Releases](../../releases) si están disponibles.
+[Descarga Gol.apk](../../releases/latest/download/Gol.apk)
 
 ## 🏗️ Instrucciones de compilación
 

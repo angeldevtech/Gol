@@ -29,9 +29,9 @@
 
 ## 📦 Download
 
-> 🔜 APK builds will be provided soon.
+Download the APK file and install it on your Android device or Android TV.
 
-For now, clone and build locally, or sideload debug builds if available in the [Releases](../../releases) tab.
+[Download Gol.apk](../../releases/latest/download/Gol.apk)
 
 ## 🏗️ Build Instructions
 
