@@ -12,11 +12,13 @@
 
 ### Android TV
 
-![TV UI](screenshots/tv_ui.png)
+<img src="screenshots/tv_ui.png" alt="TV UI"/>
 
 ### Mobile
 
-![MOBILE UI](screenshots/mobile_ui.jpg)
+<p align="center">
+<img src="screenshots/mobile_ui.jpg" alt="Mobile UI" width="200"/>
+</p>
 
 ## 🧩 Features
 
