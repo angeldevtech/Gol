@@ -3,8 +3,8 @@
         android:name="logoGroup"
         android:pivotX="2500"
         android:pivotY="2500"
-        android:scaleX="0.667"
-        android:scaleY="0.667">
+        android:scaleX="0.6"
+        android:scaleY="0.6">
         <path android:fillColor="#fff" android:pathData="M2500,2500m-2376,0a2376,2376 0,1 1,4752 0a2376,2376 0,1 1,-4752 0" android:strokeColor="#000" android:strokeWidth="24"/>
 
         <path android:fillColor="#00000000" android:pathData="m857,784 l155,158m-550,2364c231,231 538,195 826,202m-524,-2040c-491,351 -610,1064 -592,1060m1216,-1008c-51,373 84,783 364,1220m-107,-2289c157,-157 466,-267 873,-329m-528,4112c-50,132 -37,315 -8,510m62,-3883c282,32 792,74 1196,303m-404,2644c310,173 649,247 1060,180m-340,-2008c-242,334 -534,645 -872,936m1109,-2119c-111,-207 -296,-375 -499,-534m1146,1281c100,3 197,44 290,141m-438,495c158,297 181,718 204,1140" android:strokeColor="#000" android:strokeWidth="24"/>

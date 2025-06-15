@@ -9,7 +9,6 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.common.Player
-import androidx.media3.datasource.HttpDataSource
 import com.angeldevtech.gol.domain.usecases.ExtractM3U8UrlUseCase
 import com.angeldevtech.gol.domain.usecases.GetScheduleItemByIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,10 +44,16 @@ class PlayerViewModel @Inject constructor(
     private var lastLoadTime = 0L
     private val loadIntervalMs = 3 * 60 * 60 * 1000L
 
+    private val _shouldEnterPipMode = MutableStateFlow(false)
+    val shouldEnterPipMode: StateFlow<Boolean> = _shouldEnterPipMode.asStateFlow()
+    private val _isInPipMode = MutableStateFlow(false)
+    val isInPipMode = _isInPipMode.asStateFlow()
+
     private val playerListener = object : Player.Listener {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             val currentState = _uiState.value
             if (currentState is PlayerUIState.Success) {
+                _shouldEnterPipMode.value = isPlaying
                 if (isPlaying) {
                     if (pauseTimerJob?.isCompleted == true) {
                         _uiState.value = currentState.copy(
@@ -340,9 +345,11 @@ class PlayerViewModel @Inject constructor(
             delay(time)
             val currentState = _uiState.value
             if (currentState is PlayerUIState.Success) {
-                _uiState.value = currentState.copy(
-                    isOverlayVisible = false
-                )
+                if (currentState.error == null && !currentState.isLoadingNewSource){
+                    _uiState.value = currentState.copy(
+                        isOverlayVisible = false
+                    )
+                }
             }
         }
     }
@@ -362,6 +369,14 @@ class PlayerViewModel @Inject constructor(
         accumulatedPauseDuration = 0L
     }
 
+    fun onEnterPipMode() {
+        _isInPipMode.value = true
+    }
+
+    fun onExitPipMode() {
+        _isInPipMode.value = false
+    }
+
     fun stopPlayer() {
         val currentState = _uiState.value
         if (currentState is PlayerUIState.Success) {
@@ -373,7 +388,8 @@ class PlayerViewModel @Inject constructor(
         }
     }
 
-    private fun releasePlayer() {
+    fun releasePlayer() {
+        _shouldEnterPipMode.value = false
         player?.let { player ->
             player.removeListener(playerListener)
             player.stop()

@@ -4,7 +4,6 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import android.widget.FrameLayout
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
@@ -19,6 +18,7 @@ fun VideoPlayer(
     isPlaying: Boolean,
     player: ExoPlayer,
     window: Window?,
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val playerView = remember {
@@ -56,5 +56,5 @@ fun VideoPlayer(
         }
     }
 
-    AndroidView({ playerView }, modifier = Modifier.fillMaxSize())
+    AndroidView({ playerView }, modifier = modifier)
 }
