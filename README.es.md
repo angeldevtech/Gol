@@ -22,10 +22,11 @@
 
 ## 🧩 Funcionalidades
 
-* 📺 Soporte nativo para **Android TV** y **móviles**
+* 📺 Soporte nativo para **Android TV** y **móviles (Android 9+)**
 * ⏰ Horarios ajustados automáticamente a la su zona horaria
 * 🏅 Enfoque en **eventos deportivos** de diversas categorías
 * ✨ Interfaz moderna usando **Jetpack Compose**
+* 🖼️ Modo Picture-in-Picture (PiP) — probado en **Android 12+**, se espera que funcione en Android 9–11
 
 ## 📦 Descargar
 

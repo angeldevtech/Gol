@@ -22,10 +22,11 @@
 
 ## 🧩 Features
 
-* 📺 Native support for **Android TV** and **mobile**
+* 📺 Native support for **Android TV** and **mobile (Android 9+)**
 * ⏰ Event times auto-adjusted to your timezone
 * 🏅 Focus on **sports events** across multiple categories
 * ✨ Modern UI with **Jetpack Compose**
+* 🖼️ Picture-in-Picture (PiP) mode — tested on **Android 12+**, expected to work on Android 9–11
 
 ## 📦 Download
 
