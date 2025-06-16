@@ -88,7 +88,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: release/*.apk
-          name: Gol v${{ github.ref_name }}
+          name: Gol
           body: |
             ## What's Changed
             ${{ steps.changelog.outputs.changelog }}
