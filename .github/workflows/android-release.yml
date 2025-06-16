@@ -75,7 +75,7 @@ jobs:
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
           mkdir -p release
-          find app/build/outputs/apk/release -name "*.apk" -type f -exec cp {} release/"Gol v${VERSION}.apk" \;
+          find app/build/outputs/apk/release -name "*.apk" -type f -exec cp {} release/"Gol.apk" \;
 
       - name: Generate Changelog
         id: changelog
@@ -88,7 +88,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: release/*.apk
-          name: Gol
+          name: Gol ${{ github.ref_name }}
           body: |
             ## What's Changed
             ${{ steps.changelog.outputs.changelog }}
