@@ -36,8 +36,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toAndroidRectF
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.semantics.Role
 import androidx.core.app.PictureInPictureModeChangedInfo
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.toRect
 import androidx.core.util.Consumer
 import androidx.core.view.WindowCompat
@@ -47,6 +54,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import com.angeldevtech.gol.ui.screens.player.component.mobile.PlayerControlsOverlayMobile
 import com.angeldevtech.gol.ui.screens.player.component.mobile.VideoPlayer
+import com.angeldevtech.gol.utils.ACTION_PAUSE
+import com.angeldevtech.gol.utils.ACTION_PLAY
+import com.angeldevtech.gol.utils.createPipActions
 import com.angeldevtech.gol.utils.findActivity
 
 @Composable
@@ -69,9 +79,11 @@ fun MobilePlayerScreen(
         val onUserLeaveBehavior = Runnable {
             if (shouldEnterPipMode) {
                 viewModel.hideOverlay(0)
+                val successState = uiState as? PlayerUIState.Success ?: return@Runnable
                 val params = PictureInPictureParams.Builder()
                     .setSourceRectHint(playerViewBounds)
                     .setAspectRatio(Rational(16, 9))
+                    .setActions(createPipActions(context, successState.isPlaying))
                     .build()
                 activity.enterPictureInPictureMode(params)
             }
@@ -92,8 +104,47 @@ fun MobilePlayerScreen(
             }
         }
         activity.addOnPictureInPictureModeChangedListener(listener)
+
+        val pipActionsReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                when (intent?.action) {
+                    ACTION_PLAY -> {
+                        viewModel.attemptPlayerRecovery()
+                    }
+                    ACTION_PAUSE -> {
+                        player.pause()
+                    }
+                }
+            }
+        }
+        val intentFilter = IntentFilter().apply {
+            addAction(ACTION_PLAY)
+            addAction(ACTION_PAUSE)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            activity.registerReceiver(pipActionsReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            ContextCompat.registerReceiver(
+                activity,
+                pipActionsReceiver,
+                intentFilter,
+                ContextCompat.RECEIVER_NOT_EXPORTED
+            )
+        }
+
         onDispose {
             activity.removeOnPictureInPictureModeChangedListener(listener)
+            activity.unregisterReceiver(pipActionsReceiver)
+        }
+    }
+
+    LaunchedEffect(uiState, isInPipMode) {
+        if (isInPipMode) {
+            val successState = uiState as? PlayerUIState.Success ?: return@LaunchedEffect
+            val updatedParams = PictureInPictureParams.Builder()
+                .setActions(createPipActions(context, successState.isPlaying))
+                .build()
+            activity.setPictureInPictureParams(updatedParams)
         }
     }
 
