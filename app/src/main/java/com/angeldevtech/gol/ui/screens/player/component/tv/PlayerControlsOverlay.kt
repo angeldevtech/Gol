@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,14 +22,32 @@ import com.angeldevtech.gol.ui.screens.player.PlayerViewModel
 fun PlayerControlsOverlay(
     state: PlayerUIState.Success,
     viewModel: PlayerViewModel,
-    overlayButtonFocusRequester: FocusRequester,
-    initialFocusTrigger: Boolean,
     isButtonEnabled: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val shouldFocusSourcesInitially by remember(initialFocusTrigger, state.isLoadingNewSource) {
-        derivedStateOf {
-            initialFocusTrigger && state.isLoadingNewSource
+    val playPauseButtonFocusRequester = remember { FocusRequester() }
+    val errorButtonFocusRequester = remember { FocusRequester() }
+    val sourcesListFocusRequester = remember { FocusRequester() }
+
+    val focusEffectKey = remember(state) {
+        if (state.isLoadingNewSource) {
+            return@remember "Sources"
+        } else if (state.error != null) {
+            return@remember "Error"
+        } else {
+            return@remember "PausePlay"
+        }
+    }
+
+    LaunchedEffect(focusEffectKey) {
+        if (state.isOverlayVisible) {
+            if (state.isLoadingNewSource) {
+                sourcesListFocusRequester.requestFocus()
+            } else if (state.error != null) {
+                errorButtonFocusRequester.requestFocus()
+            } else {
+                playPauseButtonFocusRequester.requestFocus()
+            }
         }
     }
 
@@ -52,7 +68,7 @@ fun PlayerControlsOverlay(
                 .padding(horizontal = 48.dp, vertical = 24.dp)
         )
 
-        if(state.isLoadingNewSource) {
+        if (state.isLoadingNewSource) {
             LoadingIndicator(
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -61,14 +77,9 @@ fun PlayerControlsOverlay(
             PlayerOverlayError(
                 error = state.error,
                 attemptRecovery = { viewModel.attemptPlayerRecovery() },
-                overlayButtonFocusRequester = overlayButtonFocusRequester,
+                errorButtonFocusRequester = errorButtonFocusRequester,
                 modifier = Modifier.fillMaxSize()
             )
-            LaunchedEffect(initialFocusTrigger) {
-                if (initialFocusTrigger) {
-                    overlayButtonFocusRequester.requestFocus()
-                }
-            }
         } else {
             PlayerOverlayPlayPauseButton(
                 isPlaying = state.isPlaying,
@@ -77,29 +88,18 @@ fun PlayerControlsOverlay(
                 isButtonEnabled = isButtonEnabled,
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .focusRequester(overlayButtonFocusRequester)
+                    .focusRequester(playPauseButtonFocusRequester)
             )
-            LaunchedEffect(initialFocusTrigger) {
-                if (initialFocusTrigger) {
-                    overlayButtonFocusRequester.requestFocus()
-                }
-            }
         }
 
         PlayerOverlaySources(
             state = state,
             viewModel = viewModel,
-            overlayButtonFocusRequester = overlayButtonFocusRequester,
-            shouldFocusSourcesInitially = shouldFocusSourcesInitially,
+            sourcesListFocusRequester = sourcesListFocusRequester,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .padding(horizontal = 48.dp, vertical = 24.dp),
         )
-        LaunchedEffect(shouldFocusSourcesInitially) {
-            if (shouldFocusSourcesInitially) {
-                overlayButtonFocusRequester.requestFocus()
-            }
-        }
     }
 }

@@ -14,7 +14,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
@@ -42,12 +41,7 @@ fun PlayerScreen(
 
     BackHandler(onBack = onBack)
 
-    val overlayButtonFocusRequester = remember { FocusRequester() }
     val isButtonEnabled = remember { mutableStateOf(true) }
-
-    val successState = uiState as? PlayerUIState.Success
-    val shouldTriggerInitialOverlayFocus = successState != null &&
-            successState.isOverlayVisible
 
     LifecycleStartEffect(Unit) {
         viewModel.onLoad()
@@ -106,8 +100,6 @@ fun PlayerScreen(
                     PlayerControlsOverlay(
                         state = state,
                         viewModel = viewModel,
-                        overlayButtonFocusRequester = overlayButtonFocusRequester,
-                        initialFocusTrigger = shouldTriggerInitialOverlayFocus,
                         isButtonEnabled = isButtonEnabled.value,
                         modifier = Modifier.fillMaxSize()
                     )

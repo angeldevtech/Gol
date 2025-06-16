@@ -18,7 +18,7 @@ import androidx.tv.material3.Text
 fun PlayerOverlayError(
     error: String,
     attemptRecovery: () -> Unit,
-    overlayButtonFocusRequester: FocusRequester,
+    errorButtonFocusRequester: FocusRequester,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -33,7 +33,7 @@ fun PlayerOverlayError(
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = attemptRecovery,
-            modifier = Modifier.focusRequester(overlayButtonFocusRequester)
+            modifier = Modifier.focusRequester(errorButtonFocusRequester)
         ) {
             Text(text = "Reintentar")
         }

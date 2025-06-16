@@ -25,8 +25,7 @@ import com.angeldevtech.gol.ui.screens.player.PlayerViewModel
 fun PlayerOverlaySources(
     state: PlayerUIState.Success,
     viewModel: PlayerViewModel,
-    overlayButtonFocusRequester: FocusRequester,
-    shouldFocusSourcesInitially: Boolean,
+    sourcesListFocusRequester: FocusRequester,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -67,7 +66,7 @@ fun PlayerOverlaySources(
                                 border = BorderStroke(1.dp, Color.Gray)
                             )
                         ),
-                        modifier = if (isSelected && shouldFocusSourcesInitially) Modifier.focusRequester(overlayButtonFocusRequester) else Modifier
+                        modifier = if (isSelected) Modifier.focusRequester(sourcesListFocusRequester) else Modifier
                     ) {
                         Text(
                             text = embed.name,
