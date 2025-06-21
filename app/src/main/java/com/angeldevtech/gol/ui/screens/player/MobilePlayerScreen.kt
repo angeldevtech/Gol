@@ -155,7 +155,7 @@ fun MobilePlayerScreen(
             val windowInsetsController = WindowCompat.getInsetsController(w, w.decorView)
             windowInsetsController.systemBarsBehavior =
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
+            windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
         }
 
         onDispose {

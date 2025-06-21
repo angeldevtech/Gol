@@ -2,8 +2,11 @@ package com.angeldevtech.gol
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.angeldevtech.gol.navigation.AppNavHost
 import com.angeldevtech.gol.ui.Theme
@@ -23,7 +26,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            navigationBarStyle = SystemBarStyle.auto(darkColorScheme().surface.toArgb(), darkColorScheme().surface.toArgb())
+        )
 
         setContent {
             Theme(deviceTypeProvider) {
