@@ -6,7 +6,7 @@
 
 > 🇺🇸 Prefer to read this in English? [View README in English](README.md)
 
-**Gol** es una aplicación para Android TV y dispositivos móviles desarrollada con Kotlin y Jetpack Compose. Te permite ver eventos deportivos con horarios ajustados automáticamente a la **zona horaria local del Perú**. Es tu guía personalizada para eventos deportivos, adaptada a tu pantalla y a tu tiempo.
+**Gol** es una aplicación para Android TV y dispositivos móviles desarrollada con Kotlin y Jetpack Compose. Te permite ver eventos deportivos con horarios ajustados automáticamente a  **tu zona horaria local**. Es tu guía personalizada para eventos deportivos, adaptada a tu pantalla y a tu tiempo.
 
 ## 🖼️ Capturas de pantalla
 
