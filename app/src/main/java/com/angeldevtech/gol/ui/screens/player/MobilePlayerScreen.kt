@@ -253,7 +253,6 @@ fun MobilePlayerScreen(
                         onBackClick = proactiveOnBack,
                         modifier = Modifier
                             .fillMaxSize()
-                            .windowInsetsPadding(WindowInsets.safeDrawing)
                     )
                 }
             }
