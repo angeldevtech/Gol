@@ -39,7 +39,7 @@ fun HeaderHomeScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_launcher),
+                painter = painterResource(id = R.drawable.app_logo),
                 contentDescription = "Gol",
                 modifier = Modifier.size(36.dp)
             )
