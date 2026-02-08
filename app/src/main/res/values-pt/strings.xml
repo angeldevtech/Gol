@@ -7,6 +7,15 @@
     <string name="go_home">Voltar para a página inicial</string>
     <string name="live">AO VIVO</string>
     <string name="sources">Fonte(s):</string>
+    <string name="select_language">Selecionar idioma</string>
+
+    <!-- Languages -->
+    <string name="lang_es">Español</string>
+    <string name="lang_en">English</string>
+    <string name="lang_pt">Português</string>
+    <string name="lang_fr">Français</string>
+    <string name="lang_de">Deutsch</string>
+    <string name="lang_it">Italiano</string>
 
     <!-- Home Screen -->
     <string name="category_live_upcoming">Em jogo e em breve</string>

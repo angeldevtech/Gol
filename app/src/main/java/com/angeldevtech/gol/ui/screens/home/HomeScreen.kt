@@ -33,6 +33,8 @@ import com.angeldevtech.gol.ui.screens.home.component.tv.HeaderHomeScreen
 import com.angeldevtech.gol.ui.screens.home.component.tv.LoadingHomeScreen
 import com.angeldevtech.gol.utils.PeriodicTimeUpdateWhileResumed
 
+private const val CATEGORY_LIVE_ID = "internal_live_upcoming"
+
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
@@ -117,19 +119,19 @@ fun HomeScreen(
                     if (state.categories.isNotEmpty()){
                         val initialFocusKey = state.currentOrUpcomingEvents.firstOrNull()?.id ?: state.categories.firstOrNull()?.items?.firstOrNull()?.id
 
-                        val initialFocusCategoryName = if (state.currentOrUpcomingEvents.isNotEmpty()) {
-                            liveUpcomingTitle
+                        val initialFocusCategoryId = if (state.currentOrUpcomingEvents.isNotEmpty()) {
+                            CATEGORY_LIVE_ID
                         } else {
                             state.categories.firstOrNull { it.items.isNotEmpty() }?.name
                         }
 
-                        item(key = liveUpcomingTitle, contentType = "CurrentOrUpcomingEvents") {
+                        item(key = CATEGORY_LIVE_ID, contentType = "CurrentOrUpcomingEvents") {
                             CategoryList(
                                 ScheduleCategories(name = liveUpcomingTitle, items = state.currentOrUpcomingEvents),
                                 viewModel,
                                 onItemSelected = onItemSelected,
-                                initialFocusRequester = if (liveUpcomingTitle == initialFocusCategoryName) initialListFocusRequester else null,
-                                initialFocusKey = if (liveUpcomingTitle == initialFocusCategoryName) initialFocusKey else null
+                                initialFocusRequester = if (CATEGORY_LIVE_ID == initialFocusCategoryId) initialListFocusRequester else null,
+                                initialFocusKey = if (CATEGORY_LIVE_ID == initialFocusCategoryId) initialFocusKey else null
                             )
                         }
                         items(
@@ -141,8 +143,8 @@ fun HomeScreen(
                                 category,
                                 viewModel,
                                 onItemSelected = onItemSelected,
-                                initialFocusRequester = if (category.name == initialFocusCategoryName) initialListFocusRequester else null,
-                                initialFocusKey = if (category.name == initialFocusCategoryName) initialFocusKey else null
+                                initialFocusRequester = if (category.name == initialFocusCategoryId) initialListFocusRequester else null,
+                                initialFocusKey = if (category.name == initialFocusCategoryId) initialFocusKey else null
                             )
                         }
                     } else {

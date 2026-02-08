@@ -49,6 +49,8 @@ import com.angeldevtech.gol.ui.screens.home.component.mobile.ItemCardMobile
 import com.angeldevtech.gol.utils.PeriodicTimeUpdateWhileResumed
 import com.angeldevtech.gol.utils.findActivity
 
+private const val CATEGORY_LIVE_ID = "internal_live_upcoming"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MobileHomeScreen(
@@ -77,7 +79,7 @@ fun MobileHomeScreen(
         }
     }
 
-    var selectedCategory by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedCategoryId by rememberSaveable { mutableStateOf<String?>(null) }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -113,17 +115,23 @@ fun MobileHomeScreen(
                             .padding(innerPadding)
                     ) {
                         val liveUpcomingTitle = stringResource(R.string.category_live_upcoming)
-                        val categories =
-                            listOf(liveUpcomingTitle) + state.categories.map { it.name }
+                        
+                        // Map internal ID to display name for the Chips
+                        val categoryDisplayNames = mapOf(CATEGORY_LIVE_ID to liveUpcomingTitle) + 
+                            state.categories.associate { it.name to it.name }
+                        
+                        val categoryIds = listOf(CATEGORY_LIVE_ID) + state.categories.map { it.name }
 
-                        if (selectedCategory == null) {
-                            selectedCategory = categories.first()
+                        if (selectedCategoryId == null || !categoryIds.contains(selectedCategoryId)) {
+                            selectedCategoryId = CATEGORY_LIVE_ID
                         }
 
                         CategoryChips(
-                            categories = categories,
-                            selectedCategory = selectedCategory,
-                            onCategorySelected = { selectedCategory = it },
+                            categories = categoryIds.map { categoryDisplayNames[it] ?: it },
+                            selectedCategory = categoryDisplayNames[selectedCategoryId],
+                            onCategorySelected = { displayName ->
+                                selectedCategoryId = categoryDisplayNames.filterValues { it == displayName }.keys.firstOrNull()
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                         )
@@ -146,10 +154,10 @@ fun MobileHomeScreen(
 
                             val itemsToDisplay = mutableListOf<ScheduleItem>()
 
-                            if (selectedCategory == liveUpcomingTitle) {
+                            if (selectedCategoryId == CATEGORY_LIVE_ID) {
                                 itemsToDisplay.addAll(state.currentOrUpcomingEvents)
                             } else {
-                                state.categories.find { it.name == selectedCategory }?.items?.let {
+                                state.categories.find { it.name == selectedCategoryId }?.items?.let {
                                     itemsToDisplay.addAll(it)
                                 }
                             }

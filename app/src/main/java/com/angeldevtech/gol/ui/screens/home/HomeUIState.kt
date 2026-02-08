@@ -7,7 +7,8 @@ sealed interface HomeUIState {
     data object Loading : HomeUIState
     data class Success(
         val categories: List<ScheduleCategories>,
-        val currentOrUpcomingEvents: List<ScheduleItem> = emptyList()
+        val currentOrUpcomingEvents: List<ScheduleItem> = emptyList(),
+        val initialFocusCategoryName: String? = null
     ) : HomeUIState
     data class Error(val message: String) : HomeUIState
 }

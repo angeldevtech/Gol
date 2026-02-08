@@ -7,6 +7,15 @@
     <string name="go_home">Zurück zur Startseite</string>
     <string name="live">LIVE</string>
     <string name="sources">Quelle(n):</string>
+    <string name="select_language">Sprache wählen</string>
+
+    <!-- Languages -->
+    <string name="lang_es">Español</string>
+    <string name="lang_en">English</string>
+    <string name="lang_pt">Português</string>
+    <string name="lang_fr">Français</string>
+    <string name="lang_de">Deutsch</string>
+    <string name="lang_it">Italiano</string>
 
     <!-- Home Screen -->
     <string name="category_live_upcoming">Live und demnächst</string>

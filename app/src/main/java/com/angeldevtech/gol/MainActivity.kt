@@ -1,7 +1,7 @@
 package com.angeldevtech.gol
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -18,7 +18,7 @@ import jakarta.inject.Inject
  * Loads [AppNavHost].
  */
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var deviceTypeProvider: DeviceTypeProvider

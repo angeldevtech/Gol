@@ -76,6 +76,7 @@ android {
 dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.appcompat)
 
     // UI
     implementation(libs.androidx.tv.material)

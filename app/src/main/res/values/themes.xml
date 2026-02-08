@@ -1,5 +1,5 @@
 <resources>
-    <style name="Theme.Gol" parent="android:Theme.Material.Light.NoActionBar"/>
+    <style name="Theme.Gol" parent="Theme.AppCompat.DayNight.NoActionBar"/>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/splash_bg</item>
