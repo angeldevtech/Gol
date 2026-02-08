@@ -23,6 +23,7 @@
 ## 🧩 Features
 
 * 📺 Native support for **Android TV** and **mobile (Android 9+)**
+* 🌍 **Multi-language support** (English, Spanish, Portuguese, French, German, Italian) — *New/Experimental*
 * ⏰ Event times auto-adjusted to your timezone
 * 🏅 Focus on **sports events** across multiple categories
 * ✨ Modern UI with **Jetpack Compose**

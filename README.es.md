@@ -23,6 +23,7 @@
 ## 🧩 Funcionalidades
 
 * 📺 Soporte nativo para **Android TV** y **móviles (Android 9+)**
+* 🌍 **Soporte multi-idioma** (Inglés, Español, Portugués, Francés, Alemán, Italiano) — *Nuevo/Experimental*
 * ⏰ Horarios ajustados automáticamente a la su zona horaria
 * 🏅 Enfoque en **eventos deportivos** de diversas categorías
 * ✨ Interfaz moderna usando **Jetpack Compose**
