@@ -13,10 +13,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Button
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
+import com.angeldevtech.gol.R
 import com.angeldevtech.gol.ui.screens.player.PlayerUIState
 import kotlinx.coroutines.delay
 
@@ -52,7 +54,7 @@ fun ErrorPlayerScreen(
 
         if (state.returnHomeScreen) {
             Text(
-                text = "Serás redirigido a la página de inicio en $secondsRemaining segundos…",
+                text = stringResource(R.string.redirecting_home, secondsRemaining),
                 style = MaterialTheme.typography.bodyLarge
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -65,13 +67,13 @@ fun ErrorPlayerScreen(
             Button(
                 onClick = onBack
             ) {
-                Text(text = "Volver a la página de inicio")
+                Text(text = stringResource(R.string.go_home))
             }
             if (!state.returnHomeScreen) {
                 Button(
                     onClick = retry
                 ) {
-                    Text(text = "Reintentar")
+                    Text(text = stringResource(R.string.retry))
                 }
             }
         }

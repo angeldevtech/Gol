@@ -32,10 +32,12 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.angeldevtech.gol.R
 import com.angeldevtech.gol.domain.models.ScheduleItem
 import com.angeldevtech.gol.ui.screens.home.component.mobile.CategoryChips
 import com.angeldevtech.gol.ui.screens.home.component.mobile.EmptyCategoryMobile
@@ -110,8 +112,9 @@ fun MobileHomeScreen(
                             .fillMaxSize()
                             .padding(innerPadding)
                     ) {
+                        val liveUpcomingTitle = stringResource(R.string.category_live_upcoming)
                         val categories =
-                            listOf("En juego y en breve") + state.categories.map { it.name }
+                            listOf(liveUpcomingTitle) + state.categories.map { it.name }
 
                         if (selectedCategory == null) {
                             selectedCategory = categories.first()
@@ -143,7 +146,7 @@ fun MobileHomeScreen(
 
                             val itemsToDisplay = mutableListOf<ScheduleItem>()
 
-                            if (selectedCategory == "En juego y en breve") {
+                            if (selectedCategory == liveUpcomingTitle) {
                                 itemsToDisplay.addAll(state.currentOrUpcomingEvents)
                             } else {
                                 state.categories.find { it.name == selectedCategory }?.items?.let {

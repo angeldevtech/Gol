@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Gol</string>
+
+    <!-- General -->
+    <string name="refresh">Aktualisieren</string>
+    <string name="retry">Wiederholen</string>
+    <string name="go_home">Zurück zur Startseite</string>
+    <string name="live">LIVE</string>
+    <string name="sources">Quelle(n):</string>
+
+    <!-- Home Screen -->
+    <string name="category_live_upcoming">Live und demnächst</string>
+    <string name="empty_events_title">Zurzeit keine Ereignisse</string>
+    <string name="empty_events_desc">In der letzten oder nächsten halben Stunde gibt es keine Ereignisse</string>
+    <string name="empty_list_message">Zurzeit keine Ereignisse</string>
+
+    <!-- Player Screen -->
+    <string name="redirecting_home">Sie werden in %1$d Sekunden zur Startseite weitergeleitet…</string>
+
+    <!-- Error Messages -->
+    <string name="error_fetching_events">Hoppla! Beim Abrufen der Ereignisse ist ein Fehler aufgetreten</string>
+    <string name="error_processing_categories">Hoppla! Beim Verarbeiten der Kategorien ist ein Fehler aufgetreten</string>
+    <string name="error_fetching_events_sorted">Hoppla! Beim Abrufen der sortierten Ereignisse ist ein Fehler aufgetreten</string>
+    <string name="error_event_id_missing">Hoppla! Beim Übergeben der Ereignis-ID ist ein Fehler aufgetreten</string>
+    <string name="error_event_not_found">Hoppla! Ereignisdaten konnten nicht gefunden werden, vielleicht wurde es abgesagt oder ist bereits beendet</string>
+    <string name="error_player_init">Hoppla! Der Videoplayer konnte nicht gestartet werden</string>
+    <string name="error_player_init_with_msg">Hoppla! Der Videoplayer konnte nicht gestartet werden: %1$s</string>
+    <string name="error_unexpected_loading">Hoppla! Beim Laden des Inhalts ist ein unerwarteter Fehler aufgetreten.</string>
+
+    <!-- Network & Playback Errors -->
+    <string name="error_network">Hoppla! Es liegt ein Internetfehler vor, bitte überprüfen Sie Ihre Verbindung.</string>
+    <string name="error_stream_not_found">Hoppla! Das Stream-Segment wurde nicht gefunden (404) oder ist instabil.</string>
+    <string name="error_network_http">Hoppla! Netzwerkfehler beim Abrufen der Stream-Daten.</string>
+    <string name="error_parsing">Hoppla! Beim Parsen der Stream-Daten ist ein Fehler aufgetreten.</string>
+    <string name="error_drm">Hoppla! Es ist ein DRM-geschützter Inhaltsfehler aufgetreten.</string>
+    <string name="error_unexpected_playback">Hoppla! Ein unerwarteter Wiedergabefehler ist aufgetreten (%1$s).</string>
+</resources>

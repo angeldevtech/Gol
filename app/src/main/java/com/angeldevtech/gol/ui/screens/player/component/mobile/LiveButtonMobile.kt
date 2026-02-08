@@ -13,8 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.angeldevtech.gol.R
 
 @Composable
 fun LiveButtonMobile(
@@ -41,7 +43,7 @@ fun LiveButtonMobile(
                     .background(if (isLive) Color.Red else Color.Gray, CircleShape)
             )
             Text(
-                text = "EN VIVO",
+                text = stringResource(R.string.live),
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )

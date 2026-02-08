@@ -18,10 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.angeldevtech.gol.R
 import com.angeldevtech.gol.domain.models.ScheduleCategories
 import com.angeldevtech.gol.domain.models.ScheduleItem
 import com.angeldevtech.gol.ui.screens.home.component.tv.CategoryList
@@ -82,6 +84,8 @@ fun HomeScreen(
         }
     }
 
+    val liveUpcomingTitle = stringResource(R.string.category_live_upcoming)
+
     BoxWithConstraints(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -114,18 +118,18 @@ fun HomeScreen(
                         val initialFocusKey = state.currentOrUpcomingEvents.firstOrNull()?.id ?: state.categories.firstOrNull()?.items?.firstOrNull()?.id
 
                         val initialFocusCategoryName = if (state.currentOrUpcomingEvents.isNotEmpty()) {
-                            "En juego y en breve"
+                            liveUpcomingTitle
                         } else {
                             state.categories.firstOrNull { it.items.isNotEmpty() }?.name
                         }
 
-                        item(key = "En juego y en breve", contentType = "CurrentOrUpcomingEvents") {
+                        item(key = liveUpcomingTitle, contentType = "CurrentOrUpcomingEvents") {
                             CategoryList(
-                                ScheduleCategories(name = "En juego y en breve", items = state.currentOrUpcomingEvents),
+                                ScheduleCategories(name = liveUpcomingTitle, items = state.currentOrUpcomingEvents),
                                 viewModel,
                                 onItemSelected = onItemSelected,
-                                initialFocusRequester = if ("En juego y en breve" == initialFocusCategoryName) initialListFocusRequester else null,
-                                initialFocusKey = if ("En juego y en breve" == initialFocusCategoryName) initialFocusKey else null
+                                initialFocusRequester = if (liveUpcomingTitle == initialFocusCategoryName) initialListFocusRequester else null,
+                                initialFocusKey = if (liveUpcomingTitle == initialFocusCategoryName) initialFocusKey else null
                             )
                         }
                         items(

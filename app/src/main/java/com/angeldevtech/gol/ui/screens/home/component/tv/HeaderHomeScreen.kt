@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Button
 import androidx.tv.material3.MaterialTheme
@@ -40,12 +41,12 @@ fun HeaderHomeScreen(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.app_logo),
-                contentDescription = "Gol",
+                contentDescription = stringResource(R.string.app_name),
                 modifier = Modifier.size(36.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Gol",
+                text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.displayMedium
             )
         }
@@ -56,7 +57,7 @@ fun HeaderHomeScreen(
                 modifier = Modifier.focusRequester(refreshButtonFocusRequester)
             ) {
                 Text(
-                    text = "Actualizar"
+                    text = stringResource(R.string.refresh)
                 )
             }
         }

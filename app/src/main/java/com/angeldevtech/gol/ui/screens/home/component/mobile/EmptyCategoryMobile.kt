@@ -10,8 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.angeldevtech.gol.R
 
 @Composable
 fun EmptyCategoryMobile(
@@ -23,13 +25,13 @@ fun EmptyCategoryMobile(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "No hay eventos por el momento",
+            text = stringResource(R.string.empty_events_title),
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "No hay ningún evento en la última o próxima media hora",
+            text = stringResource(R.string.empty_events_desc),
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
             color = Color.Gray

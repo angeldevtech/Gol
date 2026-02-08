@@ -12,12 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Border
 import androidx.tv.material3.Button
 import androidx.tv.material3.ButtonDefaults
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
+import com.angeldevtech.gol.R
 import com.angeldevtech.gol.ui.screens.player.PlayerUIState
 import com.angeldevtech.gol.ui.screens.player.PlayerViewModel
 
@@ -43,7 +45,7 @@ fun PlayerOverlaySources(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Fuente(s):",
+                text = stringResource(R.string.sources),
                 color = Color.White,
                 style = MaterialTheme.typography.bodyMedium
             )

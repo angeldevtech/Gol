@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Gol</string>
+
+    <!-- General -->
+    <string name="refresh">Refresh</string>
+    <string name="retry">Retry</string>
+    <string name="go_home">Back to home page</string>
+    <string name="live">LIVE</string>
+    <string name="sources">Source(s):</string>
+
+    <!-- Home Screen -->
+    <string name="category_live_upcoming">Live and upcoming</string>
+    <string name="empty_events_title">No events at the moment</string>
+    <string name="empty_events_desc">There are no events in the last or next half hour</string>
+    <string name="empty_list_message">No events for now</string>
+
+    <!-- Player Screen -->
+    <string name="redirecting_home">You will be redirected to the home page in %1$d seconds…</string>
+
+    <!-- Error Messages -->
+    <string name="error_fetching_events">Oops! There was an error fetching the events</string>
+    <string name="error_processing_categories">Oops! There was an error processing the categories</string>
+    <string name="error_fetching_events_sorted">Oops! There was an error getting the sorted events</string>
+    <string name="error_event_id_missing">Oops! There was an error passing the event ID</string>
+    <string name="error_event_not_found">Oops! Event data could not be found, maybe it was cancelled or has already ended</string>
+    <string name="error_player_init">Oops! Could not start the video player</string>
+    <string name="error_player_init_with_msg">Oops! Could not start the video player: %1$s</string>
+    <string name="error_unexpected_loading">Oops! There was an unexpected error loading the content.</string>
+
+    <!-- Network & Playback Errors -->
+    <string name="error_network">Oops! There is an internet error, please check your connection.</string>
+    <string name="error_stream_not_found">Oops! The stream segment was not found (404) or is unstable.</string>
+    <string name="error_network_http">Oops! Network error while fetching stream data.</string>
+    <string name="error_parsing">Oops! There was an error parsing the stream data.</string>
+    <string name="error_drm">Oops! There was a DRM protected content error.</string>
+    <string name="error_unexpected_playback">Oops! An unexpected playback error occurred (%1$s).</string>
+</resources>

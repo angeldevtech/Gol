@@ -9,6 +9,7 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.common.Player
+import com.angeldevtech.gol.R
 import com.angeldevtech.gol.domain.usecases.ExtractM3U8UrlUseCase
 import com.angeldevtech.gol.domain.usecases.GetScheduleItemByIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,6 +49,10 @@ class PlayerViewModel @Inject constructor(
     val shouldEnterPipMode: StateFlow<Boolean> = _shouldEnterPipMode.asStateFlow()
     private val _isInPipMode = MutableStateFlow(false)
     val isInPipMode = _isInPipMode.asStateFlow()
+
+    private fun getString(resId: Int, vararg formatArgs: Any): String {
+        return application.getString(resId, *formatArgs)
+    }
 
     private val playerListener = object : Player.Listener {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -89,20 +94,20 @@ class PlayerViewModel @Inject constructor(
             val errorMessage = when (error.errorCode) {
                 PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED,
                 PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT,
-                PlaybackException.ERROR_CODE_IO_UNSPECIFIED -> "¡Ups! Hay un error de internet, por favor revisa tu conexión."
+                PlaybackException.ERROR_CODE_IO_UNSPECIFIED -> getString(R.string.error_network)
 
-                PlaybackException.ERROR_CODE_IO_FILE_NOT_FOUND -> "¡Ups! El segmento de la transmisión no fue encontrado (404) o está inestable."
-                PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS -> "¡Ups! Error de red al obtener datos de la transmisión."
+                PlaybackException.ERROR_CODE_IO_FILE_NOT_FOUND -> getString(R.string.error_stream_not_found)
+                PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS -> getString(R.string.error_network_http)
 
                 PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED,
-                PlaybackException.ERROR_CODE_PARSING_MANIFEST_MALFORMED -> "¡Ups! Hubo un error al analizar los datos de la transmisión."
+                PlaybackException.ERROR_CODE_PARSING_MANIFEST_MALFORMED -> getString(R.string.error_parsing)
 
                 PlaybackException.ERROR_CODE_DRM_UNSPECIFIED,
                 PlaybackException.ERROR_CODE_DRM_SCHEME_UNSUPPORTED,
                 PlaybackException.ERROR_CODE_DRM_PROVISIONING_FAILED,
-                PlaybackException.ERROR_CODE_DRM_LICENSE_ACQUISITION_FAILED -> "¡Ups! Hubo un error de contenido protegido DRM."
+                PlaybackException.ERROR_CODE_DRM_LICENSE_ACQUISITION_FAILED -> getString(R.string.error_drm)
 
-                else -> "¡Ups! Se produjo un error de reproducción inesperado (${error.errorCodeName})."
+                else -> getString(R.string.error_unexpected_playback, error.errorCodeName)
             }
 
             val currentState = _uiState.value
@@ -135,14 +140,14 @@ class PlayerViewModel @Inject constructor(
             _uiState.value = PlayerUIState.Loading
 
             if (itemId == null) {
-                _uiState.value = PlayerUIState.Error("¡Ups! Hubo un error al pasar el id del evento", true)
+                _uiState.value = PlayerUIState.Error(getString(R.string.error_event_id_missing), true)
                 return@launch
             }
 
             val scheduleItem = getScheduleItemById(itemId)
 
             if (scheduleItem == null) {
-                _uiState.value = PlayerUIState.Error("¡Ups! No se pudo encontrar datos del evento, tal vez fue cancelado o ya finalizó", true)
+                _uiState.value = PlayerUIState.Error(getString(R.string.error_event_not_found), true)
                 return@launch
             }
 
@@ -150,7 +155,7 @@ class PlayerViewModel @Inject constructor(
 
             if (player == null){
                 if (_uiState.value !is PlayerUIState.Error) {
-                    _uiState.value = PlayerUIState.Error("¡Ups! No se pudo iniciar el reproductor de video")
+                    _uiState.value = PlayerUIState.Error(getString(R.string.error_player_init))
                 }
                 return@launch
             }
@@ -171,7 +176,7 @@ class PlayerViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            _uiState.value = PlayerUIState.Error("¡Ups! No se pudo iniciar el reproductor de video: ${e.localizedMessage}")
+            _uiState.value = PlayerUIState.Error(getString(R.string.error_player_init_with_msg, e.localizedMessage ?: ""))
         }
     }
 
@@ -272,7 +277,7 @@ class PlayerViewModel @Inject constructor(
                 } catch (e: Exception) {
                     _uiState.value = currentState.copy(
                         isLoadingNewSource = false,
-                        error = e.localizedMessage ?: "¡Ups! Hubo un error inesperado cargando el contenido."
+                        error = e.localizedMessage ?: getString(R.string.error_unexpected_loading)
                     )
                 }
             }

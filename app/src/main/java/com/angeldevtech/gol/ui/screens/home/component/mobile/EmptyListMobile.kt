@@ -10,8 +10,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.angeldevtech.gol.R
 
 @Composable
 fun EmptyListMobile(
@@ -24,13 +26,13 @@ fun EmptyListMobile(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "No hay eventos por el momento",
+            text = stringResource(R.string.empty_events_title),
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onRetry) {
-            Text("Actualizar")
+            Text(stringResource(R.string.refresh))
         }
     }
 }

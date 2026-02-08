@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Gol</string>
+
+    <!-- General -->
+    <string name="refresh">Actualiser</string>
+    <string name="retry">Réessayer</string>
+    <string name="go_home">Retour à la page d\'accueil</string>
+    <string name="live">EN DIRECT</string>
+    <string name="sources">Source(s) :</string>
+
+    <!-- Home Screen -->
+    <string name="category_live_upcoming">En cours et à venir</string>
+    <string name="empty_events_title">Aucun événement pour le moment</string>
+    <string name="empty_events_desc">Il n\'y a aucun événement au cours de la dernière ou de la prochaine demi-heure</string>
+    <string name="empty_list_message">Aucun événement pour l\'instant</string>
+
+    <!-- Player Screen -->
+    <string name="redirecting_home">Vous serez redirigé vers la page d\'accueil dans %1$d secondes…</string>
+
+    <!-- Error Messages -->
+    <string name="error_fetching_events">Oups ! Une erreur est survenue lors de la récupération des événements</string>
+    <string name="error_processing_categories">Oups ! Une erreur est survenue lors du traitement des catégories</string>
+    <string name="error_fetching_events_sorted">Oups ! Une erreur est survenue lors de l\'obtention des événements triés</string>
+    <string name="error_event_id_missing">Oups ! Une erreur est survenue lors de la transmission de l\'ID de l\'événement</string>
+    <string name="error_event_not_found">Oups ! Impossible de trouver les données de l\'événement, peut-être a-t-il été annulé ou est-il déjà terminé</string>
+    <string name="error_player_init">Oups ! Impossible de démarrer le lecteur vidéo</string>
+    <string name="error_player_init_with_msg">Oups ! Impossible de démarrer le lecteur vidéo : %1$s</string>
+    <string name="error_unexpected_loading">Oups ! Une erreur inattendue est survenue lors du chargement du contenu.</string>
+
+    <!-- Network & Playback Errors -->
+    <string name="error_network">Oups ! Il y a une erreur Internet, veuillez vérifier votre connexion.</string>
+    <string name="error_stream_not_found">Oups ! Le segment du flux n\'a pas été trouvé (404) ou est instable.</string>
+    <string name="error_network_http">Oups ! Erreur réseau lors de la récupération des données du flux.</string>
+    <string name="error_parsing">Oups ! Une erreur est survenue lors de l\'analyse des données du flux.</string>
+    <string name="error_drm">Oups ! Une erreur de contenu protégé par DRM est survenue.</string>
+    <string name="error_unexpected_playback">Oups ! Une erreur de lecture inattendue s\'est produite (%1$s).</string>
+</resources>

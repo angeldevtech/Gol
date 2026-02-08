@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Gol</string>
+
+    <!-- General -->
+    <string name="refresh">Aggiorna</string>
+    <string name="retry">Riprova</string>
+    <string name="go_home">Torna alla home page</string>
+    <string name="live">IN DIRETTA</string>
+    <string name="sources">Fonte(i):</string>
+
+    <!-- Home Screen -->
+    <string name="category_live_upcoming">In corso e in arrivo</string>
+    <string name="empty_events_title">Nessun evento al momento</string>
+    <string name="empty_events_desc">Non ci sono eventi nell\'ultima o nella prossima mezz\'ora</string>
+    <string name="empty_list_message">Nessun evento per ora</string>
+
+    <!-- Player Screen -->
+    <string name="redirecting_home">Verrai reindirizzato alla home page tra %1$d secondi…</string>
+
+    <!-- Error Messages -->
+    <string name="error_fetching_events">Ops! Si è verificato un errore durante il recupero degli eventi</string>
+    <string name="error_processing_categories">Ops! Si è verificato un errore durante l\'elaborazione delle categorie</string>
+    <string name="error_fetching_events_sorted">Ops! Si è verificato un errore durante il recupero degli eventi ordinati</string>
+    <string name="error_event_id_missing">Ops! Si è verificato un errore nel passaggio dell\'ID dell\'evento</string>
+    <string name="error_event_not_found">Ops! Impossibile trovare i dati dell\'evento, forse è stato cancellato o è già terminato</string>
+    <string name="error_player_init">Ops! Impossibile avviare il lettore video</string>
+    <string name="error_player_init_with_msg">Ops! Impossibile avviare il lettore video: %1$s</string>
+    <string name="error_unexpected_loading">Ops! Si è verificato un errore imprevisto durante il caricamento del contenuto.</string>
+
+    <!-- Network & Playback Errors -->
+    <string name="error_network">Ops! C\'è un errore di internet, controlla la tua connessione.</string>
+    <string name="error_stream_not_found">Ops! Il segmento dello stream non è stato trovato (404) o è instabile.</string>
+    <string name="error_network_http">Ops! Errore di rete durante il recupero dei dati dello stream.</string>
+    <string name="error_parsing">Ops! Si è verificato un errore durante l\'analisi dei dati dello stream.</string>
+    <string name="error_drm">Ops! Si è verificato un errore relativo ai contenuti protetti da DRM.</string>
+    <string name="error_unexpected_playback">Ops! Si è verificato un errore di riproduzione imprevisto (%1$s).</string>
+</resources>

@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Gol</string>
+
+    <!-- General -->
+    <string name="refresh">Atualizar</string>
+    <string name="retry">Tentar novamente</string>
+    <string name="go_home">Voltar para a página inicial</string>
+    <string name="live">AO VIVO</string>
+    <string name="sources">Fonte(s):</string>
+
+    <!-- Home Screen -->
+    <string name="category_live_upcoming">Em jogo e em breve</string>
+    <string name="empty_events_title">Não há eventos no momento</string>
+    <string name="empty_events_desc">Não há eventos na última ou na próxima meia hora</string>
+    <string name="empty_list_message">Não há eventos por enquanto</string>
+
+    <!-- Player Screen -->
+    <string name="redirecting_home">Você será redirecionado para a página inicial em %1$d segundos…</string>
+
+    <!-- Error Messages -->
+    <string name="error_fetching_events">Ops! Ocorreu um erro ao buscar os eventos</string>
+    <string name="error_processing_categories">Ops! Ocorreu um erro ao processar as categorias</string>
+    <string name="error_fetching_events_sorted">Ops! Ocorreu um erro ao obter os eventos ordenados</string>
+    <string name="error_event_id_missing">Ops! Ocorreu um erro ao passar o ID do evento</string>
+    <string name="error_event_not_found">Ops! Não foi possível encontrar os dados do evento, talvez tenha sido cancelado ou já tenha terminado</string>
+    <string name="error_player_init">Ops! Não foi possível iniciar o reprodutor de vídeo</string>
+    <string name="error_player_init_with_msg">Ops! Não foi possível iniciar o reprodutor de vídeo: %1$s</string>
+    <string name="error_unexpected_loading">Ops! Ocorreu um erro inesperado ao carregar o conteúdo.</string>
+
+    <!-- Network & Playback Errors -->
+    <string name="error_network">Ops! Há um erro de internet, por favor verifique sua conexão.</string>
+    <string name="error_stream_not_found">Ops! O segmento da transmissão não foi encontrado (404) ou está instável.</string>
+    <string name="error_network_http">Ops! Erro de rede ao obter dados da transmissão.</string>
+    <string name="error_parsing">Ops! Ocorreu um erro ao analisar os dados da transmissão.</string>
+    <string name="error_drm">Ops! Ocorreu um erro de conteúdo protegido por DRM.</string>
+    <string name="error_unexpected_playback">Ops! Ocorreu um erro de reprodução inesperado (%1$s).</string>
+</resources>

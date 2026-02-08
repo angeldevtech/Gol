@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">Gol</string>
+
+    <!-- General -->
+    <string name="refresh">Actualizar</string>
+    <string name="retry">Reintentar</string>
+    <string name="go_home">Volver a la página de inicio</string>
+    <string name="live">EN VIVO</string>
+    <string name="sources">Fuente(s):</string>
+
+    <!-- Home Screen -->
+    <string name="category_live_upcoming">En juego y en breve</string>
+    <string name="empty_events_title">No hay eventos por el momento</string>
+    <string name="empty_events_desc">No hay ningún evento en la última o próxima media hora</string>
+    <string name="empty_list_message">No hay eventos por ahora</string>
+
+    <!-- Player Screen -->
+    <string name="redirecting_home">Serás redirigido a la página de inicio en %1$d segundos…</string>
+
+    <!-- Error Messages -->
+    <string name="error_fetching_events">¡Ups! Hubo un error al obtener los eventos</string>
+    <string name="error_processing_categories">¡Ups! Hubo un error procesando las categorías</string>
+    <string name="error_fetching_events_sorted">¡Ups! Hubo un error al obtener los eventos ordenados</string>
+    <string name="error_event_id_missing">¡Ups! Hubo un error al pasar el id del evento</string>
+    <string name="error_event_not_found">¡Ups! No se pudo encontrar datos del evento, tal vez fue cancelado o ya finalizó</string>
+    <string name="error_player_init">¡Ups! No se pudo iniciar el reproductor de video</string>
+    <string name="error_player_init_with_msg">¡Ups! No se pudo iniciar el reproductor de video: %1$s</string>
+    <string name="error_unexpected_loading">¡Ups! Hubo un error inesperado cargando el contenido.</string>
+
+    <!-- Network & Playback Errors -->
+    <string name="error_network">¡Ups! Hay un error de internet, por favor revisa tu conexión.</string>
+    <string name="error_stream_not_found">¡Ups! El segmento de la transmisión no fue encontrado (404) o está inestable.</string>
+    <string name="error_network_http">¡Ups! Error de red al obtener datos de la transmisión.</string>
+    <string name="error_parsing">¡Ups! Hubo un error al analizar los datos de la transmisión.</string>
+    <string name="error_drm">¡Ups! Hubo un error de contenido protegido DRM.</string>
+    <string name="error_unexpected_playback">¡Ups! Se produjo un error de reproducción inesperado (%1$s).</string>
 </resources>

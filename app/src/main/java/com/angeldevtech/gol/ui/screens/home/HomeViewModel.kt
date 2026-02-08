@@ -16,11 +16,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import androidx.core.graphics.scale
 import androidx.palette.graphics.Palette
+import com.angeldevtech.gol.R
 import com.angeldevtech.gol.domain.models.ScheduleCategories
 import com.angeldevtech.gol.domain.models.ScheduleItem
 import com.angeldevtech.gol.utils.PaletteResult
 import com.angeldevtech.gol.utils.WhiteFilter
 import com.angeldevtech.gol.utils.isLightColor
+import android.app.Application
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.withContext
@@ -31,7 +33,8 @@ import java.time.LocalTime
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getScheduleCategories: GetScheduleCategoriesUseCase,
-    private val refreshSchedule: RefreshScheduleUseCase
+    private val refreshSchedule: RefreshScheduleUseCase,
+    private val application: Application
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow<HomeUIState>(HomeUIState.Loading)
@@ -46,6 +49,10 @@ class HomeViewModel @Inject constructor(
     private var lastRefreshTime = 0L
     private val refreshIntervalMs = 3 * 60 * 60 * 1000L
 
+    private fun getString(resId: Int): String {
+        return application.getString(resId)
+    }
+
     private fun observeSchedule() {
         _uiState.value = HomeUIState.Loading
 
@@ -55,7 +62,7 @@ class HomeViewModel @Inject constructor(
             if (result.isFailure) {
                 _isPullToRefreshing.value = false
                 withContext(Dispatchers.Main) {
-                    _uiState.value = HomeUIState.Error("¡Ups! Hubo un error al obtener los eventos")
+                    _uiState.value = HomeUIState.Error(getString(R.string.error_fetching_events))
                 }
                 return@launch
             }
@@ -65,7 +72,7 @@ class HomeViewModel @Inject constructor(
                     _isPullToRefreshing.value = false
                     withContext(Dispatchers.Main) {
                         _uiState.value =
-                            HomeUIState.Error("¡Ups! Hubo un error procesando las categorías")
+                            HomeUIState.Error(getString(R.string.error_processing_categories))
                     }
                 }
                 .collect { scheduleResult ->
@@ -83,7 +90,7 @@ class HomeViewModel @Inject constructor(
                             _isPullToRefreshing.value = false
                             withContext(Dispatchers.Main) {
                                 _uiState.value =
-                                    HomeUIState.Error("¡Ups! Hubo un error al obtener los eventos ordenados")
+                                    HomeUIState.Error(getString(R.string.error_fetching_events_sorted))
                             }
                         }
                     )
